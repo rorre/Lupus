@@ -66,7 +66,7 @@ class Furry(commands.Cog):
 
     @commands.command()
     async def e926(self, ctx, *, tags):
-        if "order:score_asc" in args:
+        if "order:score_asc" in tags:
             await ctx.send("Nope.")
             return
         tags = tags.replace("rating:e", "").replace("rating:q", "")
