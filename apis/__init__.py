@@ -1,0 +1,1 @@
+from .Urbandictionary import UrbanClient
