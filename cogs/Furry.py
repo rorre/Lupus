@@ -25,6 +25,9 @@ class Furry(commands.Cog):
         self.client = AsyncYippiClient(
             "FurBot", "1.0", "Error-", loop=self.bot.loop)
 
+    def _is_deleted(self, post):
+        return post.flags["deleted"]
+
     def _generate_esix_embed(self, post):
         all_tags = []
         for k in post.tags:
@@ -37,7 +40,7 @@ class Furry(commands.Cog):
 
         ratings = {"e": "Explicit", "q": "Questionable/Mature", "s": "Safe"}
         colors = {"e": discord.Colour(0xA31014), "q": discord.Colour(
-            0xadaa07), "s": discord.Colour(0x940909)}
+            0xadaa07), "s": discord.Colour(0xeb612)}
         embed = discord.Embed(colour=colors.get(post.rating))
 
         embed.set_image(url=post.sample["url"])
@@ -68,6 +71,8 @@ class Furry(commands.Cog):
         if not posts:
             return await ctx.send("No results found!")
         picked = random.choice(posts)
+        while self._is_deleted(picked):
+            picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()
@@ -84,6 +89,8 @@ class Furry(commands.Cog):
         if not posts:
             return await ctx.send("No results found!")
         picked = random.choice(posts)
+        while self._is_deleted(picked):
+            picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()
@@ -95,6 +102,8 @@ class Furry(commands.Cog):
         if not posts:
             return await ctx.send("Somehow I can't get anything from esix...")
         picked = random.choice(posts)
+        while self._is_deleted(picked):
+            picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()

@@ -133,7 +133,7 @@ class General(commands.Cog):
             os.makedirs("tmp")
 
         if not embeds:
-            await ctx.send("Please send me an image with `f!jpeg` as description!")
+            return await ctx.send("Please send me an image with `f!jpeg` as description!")
 
         for embed in embeds:
             name = self._generate_random_name(10) + ".jpg"
