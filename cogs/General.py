@@ -1,12 +1,15 @@
 import random
 import discord
 from discord.ext import commands
-from apis import UrbanClient
+from apis.Urbandictionary import UrbanClient
+from apis.OpenWeatherMap import OWMClient, RateLimitedException, OWMException
 from PIL import Image
 import string
 import os
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
+import config
+from datetime import datetime
 
 
 class General(commands.Cog):
@@ -26,7 +29,10 @@ class General(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.urban_client = UrbanClient(self.bot.aiohttp_session, self.bot.loop)
+        self.urban_client = UrbanClient(
+            self.bot.aiohttp_session, self.bot.loop)
+        self.owm_client = OWMClient(
+            config.owm_key, session=self.bot.aiohttp_session, loop=self.bot.loop)
         self.thread_pool = ThreadPoolExecutor()
 
     def _generate_random_name(self, n):
@@ -67,7 +73,8 @@ class General(commands.Cog):
         embed.add_field(name="Definition", value=best.definition, inline=False)
         embed.add_field(name="Example", value=best.example, inline=True)
         embed.set_footer(
-            text="👍 " + str(best.thumbs_up) + " | " + "👎 " + str(best.thumbs_down)
+            text="👍 " + str(best.thumbs_up) + " | " +
+            "👎 " + str(best.thumbs_down)
         )
         await ctx.send(embed=embed)
 
@@ -142,6 +149,43 @@ class General(commands.Cog):
                 os.remove(fil)
         except:
             pass
+
+    def _generate_weather_embed(self, w):
+        weather = w.weather[0]
+        embed = discord.Embed(title=f"Weather for {w.name}, {w.sys['country']} :flag_{w.sys['country'].lower()}:", colour=discord.Colour(
+            0x6da1f8), description=f"**{weather['main']}** ({weather['description']})\r\n**Temperature**: {w.main['temp']}°C (Feels like {w.main['feels_like']}°)\r\n**Humidity**: {w.main['humidity']}%", timestamp=datetime.utcfromtimestamp(w.dt))
+
+        embed.set_thumbnail(
+            url=f"http://openweathermap.org/img/wn/{weather['icon']}@2x.png")
+        embed.set_footer(text="Gathered from OpenWeatherMap",
+                         icon_url="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png")
+
+        embed.add_field(
+            name="Wind", value=f"{w.wind['speed']} m/s, ({w.wind['deg']})")
+        embed.add_field(name="Sunrise", value=datetime.fromtimestamp(
+            w.sys['sunrise']).isoformat(" "), inline=True)
+        embed.add_field(name="Sunset", value=datetime.fromtimestamp(
+            w.sys['sunset']).isoformat(" "), inline=True)
+
+        return embed
+
+    @commands.command()
+    async def weather(self, ctx, place, state=None, country=None):
+        """Sends weather info of a location
+
+        Usage: f!weather <place> [(<state>) <country code>]
+        Anything in brackets are optional. But recommended for more accurate result."""
+        if state:
+            place += "," + state
+        if country:
+            place += "," + country
+        try:
+            weather = await self.owm_client.get_weather(place)
+        except RateLimitedException:
+            return await ctx.send("Bot got rate limited by server, sorry.")
+        except OWMException as e:
+            return await ctx.send(str(e))
+        await ctx.send(embed=self._generate_weather_embed(weather))
 
 
 def setup(bot):

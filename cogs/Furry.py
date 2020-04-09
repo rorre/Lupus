@@ -20,7 +20,8 @@ class Furry(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.client = AsyncYippiClient("FurBot", "1.0", "Error-", loop=self.bot.loop)
+        self.client = AsyncYippiClient(
+            "FurBot", "1.0", "Error-", loop=self.bot.loop)
 
     def _generate_esix_embed(self, post):
         all_tags = []
@@ -33,8 +34,9 @@ class Furry(commands.Cog):
             tags_string = tags_string[:1000] + "... (*truncated*)"
 
         ratings = {"e": "Explicit", "q": "Questionable/Mature", "s": "Safe"}
-
-        embed = discord.Embed(colour=discord.Colour(0xA31014))
+        colors = {"e": discord.Colour(0xA31014), "q": discord.Colour(
+            0xadaa07), "s": discord.Colour(0x940909)}
+        embed = discord.Embed(colour=colors.get(post.rating))
 
         embed.set_image(url=post.sample["url"])
         embed.set_thumbnail(url="https://e621.net/apple-touch-icon.png")
@@ -43,9 +45,11 @@ class Furry(commands.Cog):
         embed.add_field(
             name="Artist", value=f"`{' '.join(post.tags['artist'])}`", inline=True
         )
-        embed.add_field(name="Rating", value=ratings.get(post.rating), inline=True)
+        embed.add_field(name="Rating", value=ratings.get(
+            post.rating), inline=True)
         embed.add_field(name="Tags", value=f"`{tags_string}`", inline=False)
-        embed.add_field(name="Full Image URL", value=post.file["url"], inline=False)
+        embed.add_field(name="Full Image URL",
+                        value=post.file["url"], inline=False)
 
         return embed
 
