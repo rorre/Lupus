@@ -8,6 +8,7 @@ import os
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
 
+
 class General(commands.Cog):
     """General/fun stuffs.
 
@@ -27,12 +28,15 @@ class General(commands.Cog):
         self.bot = bot
         self.urban_client = UrbanClient(self.bot.aiohttp_session, self.bot.loop)
         self.thread_pool = ThreadPoolExecutor()
-    
+
     def _generate_random_name(self, n):
-        return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
-    
+        return "".join(
+            random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+            for _ in range(n)
+        )
+
     def _process_image(self, name):
-        Image.open("tmp/" + name).save("tmp/more-" + name, 'JPEG', quality=1)
+        Image.open("tmp/" + name).save("tmp/more-" + name, "JPEG", quality=1)
 
     @commands.command(pass_context=True)
     async def avatar(self, ctx, message):
@@ -41,7 +45,7 @@ class General(commands.Cog):
         `(mentioned users)` : `discord.User`"""
         for user in ctx.message.mentions:
             await ctx.send(f"""Avatar URL for {user.name}: {user.avatar_url}""")
-    
+
     @commands.command(pass_context=True)
     async def urban(self, ctx, *, query):
         results = await self.urban_client.search_term(query)
@@ -54,20 +58,35 @@ class General(commands.Cog):
         if len(best.example) > 1024:
             best.example = best.example[:1000] + "... *(truncated)*"
 
-        embed = discord.Embed(title=f"**{best.word}**", url=best.permalink, description=f"by: {best.author}", color=0xc4423c)
+        embed = discord.Embed(
+            title=f"**{best.word}**",
+            url=best.permalink,
+            description=f"by: {best.author}",
+            color=0xC4423C,
+        )
         embed.add_field(name="Definition", value=best.definition, inline=False)
         embed.add_field(name="Example", value=best.example, inline=True)
-        embed.set_footer(text=u"👍 " + str(best.thumbs_up) + " | " + u"👎 " + str(best.thumbs_down))
+        embed.set_footer(
+            text="👍 " + str(best.thumbs_up) + " | " + "👎 " + str(best.thumbs_down)
+        )
         await ctx.send(embed=embed)
-    
+
     @commands.command()
     async def about(self, ctx):
         """Well uhh, the bot's info, of course..."""
-        embed = discord.Embed(colour=discord.Colour(0x4a90e2))
+        embed = discord.Embed(colour=discord.Colour(0x4A90E2))
 
-        embed.add_field(name="Author", value="-Keitaro/rorre/Error- // [Github](https://github.com/rorre) // [Twitter](https://twitter.com/osuRen_)", inline=False)
+        embed.add_field(
+            name="Author",
+            value="-Keitaro/rorre/Error- // [Github](https://github.com/rorre) // [Twitter](https://twitter.com/osuRen_)",
+            inline=False,
+        )
         embed.add_field(name="Library", value="Discord.py", inline=False)
-        embed.add_field(name="Repository", value="[https://github.com/rorre/Furbot](https://github.com/rorre/Furbot)", inline=False)
+        embed.add_field(
+            name="Repository",
+            value="[https://github.com/rorre/Furbot](https://github.com/rorre/Furbot)",
+            inline=False,
+        )
 
         await ctx.send(embed=embed)
 
@@ -81,7 +100,7 @@ class General(commands.Cog):
 
         Usage:
         `f!choose arg1 | arg2 | arg3 | ...`"""
-        choices = args.split('|')
+        choices = args.split("|")
         for i in range(len(choices)):
             if not choices[i].strip():
                 return await ctx.send(f"Argument number {i+1} is invalid.")
@@ -101,17 +120,16 @@ class General(commands.Cog):
 
         if not os.path.exists("tmp"):
             os.makedirs("tmp")
-        
+
         if not embeds:
             await ctx.send("Please send me an image with `f!jpeg` as description!")
-        
+
         for embed in embeds:
             name = self._generate_random_name(10) + ".jpg"
             await embed.save("tmp/" + name)
 
             await self.bot.loop.run_in_executor(
-                self.thread_pool,
-                partial(self._process_image, name)
+                self.thread_pool, partial(self._process_image, name)
             )
 
             filenames.append("tmp/more-" + name)
@@ -124,6 +142,7 @@ class General(commands.Cog):
                 os.remove(fil)
         except:
             pass
+
 
 def setup(bot):
     bot.add_cog(General(bot))
