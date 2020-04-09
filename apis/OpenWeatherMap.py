@@ -1,7 +1,8 @@
 import asyncio
-import aiohttp
-from urllib.parse import urlencode
 from typing import List
+from urllib.parse import urlencode
+
+import aiohttp
 
 
 class RateLimitedException(Exception):

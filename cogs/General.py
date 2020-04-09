@@ -1,15 +1,17 @@
+import os
 import random
+import string
+from concurrent.futures.thread import ThreadPoolExecutor
+from datetime import datetime
+from functools import partial
+
 import discord
 from discord.ext import commands
-from apis.Urbandictionary import UrbanClient
-from apis.OpenWeatherMap import OWMClient, RateLimitedException, OWMException
 from PIL import Image
-import string
-import os
-from concurrent.futures.thread import ThreadPoolExecutor
-from functools import partial
+
 import config
-from datetime import datetime
+from apis.OpenWeatherMap import OWMClient, OWMException, RateLimitedException
+from apis.Urbandictionary import UrbanClient
 
 
 class General(commands.Cog):
@@ -32,7 +34,9 @@ class General(commands.Cog):
         self.urban_client = UrbanClient(
             self.bot.aiohttp_session, self.bot.loop)
         self.owm_client = OWMClient(
-            config.owm_key, session=self.bot.aiohttp_session, loop=self.bot.loop)
+            config.owm_key,
+            session=self.bot.aiohttp_session,
+            loop=self.bot.loop)
         self.thread_pool = ThreadPoolExecutor()
 
     def _generate_random_name(self, n):
@@ -102,7 +106,7 @@ class General(commands.Cog):
         """Choose one of a lot arguments
 
         Arguments:
-        `*args` : list  
+        `*args` : list
         The message but its splitted to a list.
 
         Usage:
@@ -147,18 +151,23 @@ class General(commands.Cog):
         try:
             for fil in filenames:
                 os.remove(fil)
-        except:
+        except BaseException:
             pass
 
     def _generate_weather_embed(self, w):
         weather = w.weather[0]
-        embed = discord.Embed(title=f"Weather for {w.name}, {w.sys['country']} :flag_{w.sys['country'].lower()}:", colour=discord.Colour(
-            0x6da1f8), description=f"**{weather['main']}** ({weather['description']})\r\n**Temperature**: {w.main['temp']}°C (Feels like {w.main['feels_like']}°)\r\n**Humidity**: {w.main['humidity']}%", timestamp=datetime.utcfromtimestamp(w.dt))
+        embed = discord.Embed(
+            title=f"Weather for {w.name}, {w.sys['country']} :flag_{w.sys['country'].lower()}:",
+            colour=discord.Colour(0x6da1f8),
+            description=f"**{weather['main']}** ({weather['description']})\r\n**Temperature**: {w.main['temp']}°C (Feels like {w.main['feels_like']}°)\r\n**Humidity**: {w.main['humidity']}%",
+            timestamp=datetime.utcfromtimestamp(
+                w.dt))
 
         embed.set_thumbnail(
             url=f"http://openweathermap.org/img/wn/{weather['icon']}@2x.png")
-        embed.set_footer(text="Gathered from OpenWeatherMap",
-                         icon_url="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png")
+        embed.set_footer(
+            text="Gathered from OpenWeatherMap",
+            icon_url="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png")
 
         embed.add_field(
             name="Wind", value=f"{w.wind['speed']} m/s, ({w.wind['deg']})")

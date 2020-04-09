@@ -1,6 +1,7 @@
-import aiohttp
-import traceback
 import sys
+import traceback
+
+import aiohttp
 from discord.ext import commands
 
 cogs = ["cogs.Furry", "cogs.General"]

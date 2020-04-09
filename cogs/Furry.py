@@ -1,9 +1,11 @@
-from yippi import AsyncYippiClient
-from helper import checks
-from discord.ext import commands
 import random
-import discord
 import re
+
+import discord
+from discord.ext import commands
+from yippi import AsyncYippiClient
+
+from helper import checks
 
 ESIX_REGEX = r"https:\/\/[www\.]*e[(?:621)(?:926)]+\.net\/posts\/(\d+)"
 re_esix = re.compile(ESIX_REGEX)
@@ -15,7 +17,7 @@ class Furry(commands.Cog):
     Commands:
         e621       Searches e621 with given queries.
         e926       Searches e926 with given queries.
-        randompick Output random result from e621/e926.  
+        randompick Output random result from e621/e926.
         show       Show a post from e621/e926 with given post ID"""
 
     def __init__(self, bot):
@@ -43,8 +45,9 @@ class Furry(commands.Cog):
         embed.set_author(name=f"Post #{post.id}")
 
         embed.add_field(
-            name="Artist", value=f"`{' '.join(post.tags['artist'])}`", inline=True
-        )
+            name="Artist",
+            value=f"`{' '.join(post.tags['artist'])}`",
+            inline=True)
         embed.add_field(name="Rating", value=ratings.get(
             post.rating), inline=True)
         embed.add_field(name="Tags", value=f"`{tags_string}`", inline=False)
@@ -103,7 +106,7 @@ class Furry(commands.Cog):
             post = re_result[1]
         try:
             picked = await self.client.post(post)
-        except:
+        except BaseException:
             return await ctx.send("Either not found or server got toasted.")
         if not picked:
             return await ctx.send("Post doesn't exist!")
