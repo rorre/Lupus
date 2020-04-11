@@ -32,11 +32,9 @@ class FurBot(commands.Bot):
         """Sends greeting message to server when joining, but it searches for suitable channel first by invoking `find_channel(guild)`"""
         channel = await self.find_channel(guild)
         await channel.send(
-            "Hello there, "
-            + guild.name
-            + """!\r
-    I'm FurBot! If you want to try me out, go ahead check out the help! The command is `f!help`.\r\r
-    Thank you very much for using this bot!"""
+            "Hello there, "+ guild.name + "!\r" +
+            "I'm FurBot! If you want to try me out, go ahead check out the help! The command is `f!help`.\r\r"+
+            "Thank you very much for using this bot!"
         )
 
     async def on_command_error(self, ctx, error):
