@@ -45,15 +45,17 @@ class FurBot(commands.Bot):
 
         if isinstance(error, ignored):
             return
-        elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send("Missing required argument: " + error.param.name)
-
-        traceback.print_exception(
-            type(error), error, error.__traceback__, file=sys.stderr
-        )
-        return await ctx.send(
-            "An exception has occured: `{}`".format(error.__class__.__name__)
-        )
+        elif isinstance(error, commands.UserInputError):
+            return await ctx.send_help(entity=ctx.command)
+        elif isinstance(error, commands.CommandOnCooldown):
+            return await ctx.send(f"Rate limited. Try again in `{error.retry_after}` seconds.")
+        elif isinstance(error, commands.CommandInvokeError):
+            traceback.print_exception(
+                type(error), error, error.__traceback__, file=sys.stderr
+            )
+            return await ctx.send(
+                "An exception has occured: `{}` on command `{}`".format(error.__class__.__name__,ctx.command.name)
+            )
 
 
 bot = FurBot()
