@@ -19,14 +19,10 @@ class General(commands.Cog):
 
     Commands:
         about      Well uhh, the bot's info, of course...
-        anime      Searches anime to MAL
         avatar     Sends avatar link of mentioned user.
-        choose     Choose one of a lot arguments
-        manga      Searches manga to MAL
-        report     Reports a problem to bot owner.
-        sauce      Reverse search an image given
-        urban      Searches urbandictionary for a definition.
-        forecast   Sends forecast of a location
+        choose     Choose one of a lot arguments.
+        roll       Roll a number from 1 to n.
+        urban      Search Urbandictionary for a definition.
         weather    Sends weather of a location"""
 
     def __init__(self, bot):
@@ -49,15 +45,20 @@ class General(commands.Cog):
         Image.open("tmp/" + name).save("tmp/more-" + name, "JPEG", quality=1)
 
     @commands.command(pass_context=True)
-    async def avatar(self, ctx, message):
+    async def avatar(self, ctx, users: commands.Greedy[discord.User]):
         """Sends avatar link of mentioned users.
-        Arguments:
-        `(mentioned users)` : `discord.User`"""
-        for user in ctx.message.mentions:
-            await ctx.send(f"""Avatar URL for {user.name}: {user.avatar_url}""")
+        
+        Usage: f!avatar <user1> <user2> <user3> <user4> ..."""
+        res = "Avatar URL for:\r"
+        for user in users:
+            res += f"- {user.name}: {user.avatar_url_as(format='png')}\r"
+        await ctx.send(res)
 
     @commands.command(pass_context=True)
     async def urban(self, ctx, *, query):
+        """Search Urbandictionary for a definition.
+        
+        Usage: f!urban <term>"""
         results = await self.urban_client.search_term(query)
         if not results:
             return await ctx.send("No results found!")
@@ -103,14 +104,14 @@ class General(commands.Cog):
 
     @commands.command()
     async def choose(self, ctx, *, args):
-        """Choose one of a lot arguments
+        """Choose one of a lot arguments.
 
         Arguments:
         `*args` : list
         The message but its splitted to a list.
 
         Usage:
-        `f!choose arg1 | arg2 | arg3 | ...`"""
+        `f!choose <arg1> | <arg2> | <arg3> | ...`"""
         choices = args.split("|")
         for i in range(len(choices)):
             if not choices[i].strip():
@@ -122,7 +123,7 @@ class General(commands.Cog):
 
     @commands.command()
     async def jpeg(self, ctx):
-        """Basically needsmorejpeg
+        """Basically needsmorejpeg.
 
         Usage: Send an image wiyh f!jpeg as description"""
         embeds = ctx.message.attachments
@@ -156,6 +157,9 @@ class General(commands.Cog):
 
     @commands.command()
     async def roll(self, ctx, n : typing.Optional[int] = 10):
+        """Roll a number from 1 to n.
+        
+        Usage: f!roll <n>"""
         res = random.randint(1, n)
         await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
@@ -185,7 +189,7 @@ class General(commands.Cog):
 
     @commands.command()
     async def weather(self, ctx, place, state=None, country=None):
-        """Sends weather info of a location
+        """Sends weather info of a location.
 
         Usage: f!weather <place> [(<state>) <country code>]
         Anything in brackets are optional. But recommended for more accurate result."""

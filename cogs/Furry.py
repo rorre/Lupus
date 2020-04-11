@@ -1,6 +1,7 @@
 import random
 import re
 
+from cachetools import cached, TTLCache, LRUCache
 import discord
 from discord.ext import commands
 from yippi import AsyncYippiClient
@@ -59,6 +60,14 @@ class Furry(commands.Cog):
 
         return embed
 
+    @cached(cache=LRUCache(maxsize=512))
+    async def _cached_search_post(self, pid):
+        return await self.client.post(pid)
+
+    @cached(cache=TTLCache(maxsize=512, ttl=1800))
+    async def _cached_search_query(self, tags=None, limit=None, page=None):
+        return await self.client.posts(tags, limit=limit, page=page)
+
     @commands.command()
     @commands.check(checks.is_nsfw)
     async def e621(self, ctx, *, tags):
@@ -67,9 +76,11 @@ class Furry(commands.Cog):
             return
         if "score:" not in tags:
             tags += " score:>25"
-        posts = await self.client.posts(tags, limit=320)
+        
+        posts = await self._cached_search_query(tags, limit=320)
         if not posts:
             return await ctx.send("No results found!")
+        
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -80,14 +91,17 @@ class Furry(commands.Cog):
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
             return
+        
         tags = tags.replace("rating:e", "").replace("rating:q", "")
         if "score:" not in tags:
             tags += " score:>25"
         if "rating:" not in tags:
             tags += " rating:s"
-        posts = await self.client.posts(tags, limit=320)
+        
+        posts = await self._cached_search_query(tags, limit=320)
         if not posts:
             return await ctx.send("No results found!")
+        
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -98,9 +112,11 @@ class Furry(commands.Cog):
         query = "score:>25"
         if not checks.is_nsfw(ctx):
             query += " rating:s"
-        posts = await self.client.posts(query, limit=320, page=random.randint(1, 301))
+        
+        posts = await self._cached_search_query(query, limit=320, page=random.randint(1, 301))
         if not posts:
             return await ctx.send("Somehow I can't get anything from esix...")
+        
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -113,8 +129,9 @@ class Furry(commands.Cog):
             if not re_result:
                 return await ctx.send("Send URL or Post ID!")
             post = re_result[1]
+        
         try:
-            picked = await self.client.post(post)
+            picked = await self._cached_search_post(post)
         except BaseException:
             return await ctx.send("Either not found or server got toasted.")
         if not picked:
