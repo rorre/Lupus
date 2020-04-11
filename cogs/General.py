@@ -4,7 +4,7 @@ import string
 from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from functools import partial
-
+import typing
 import discord
 from discord.ext import commands
 from PIL import Image
@@ -153,6 +153,11 @@ class General(commands.Cog):
                 os.remove(fil)
         except BaseException:
             pass
+
+    @commands.command()
+    async def roll(self, ctx, n : typing.Optional[int] = 10):
+        res = random.randint(1, n)
+        await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
     def _generate_weather_embed(self, w):
         weather = w.weather[0]
