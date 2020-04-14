@@ -55,6 +55,7 @@ class General(commands.Cog):
         await ctx.send(res)
 
     @commands.command(pass_context=True)
+    @commands.cooldown(30, 60, commands.BucketType.guild)
     async def urban(self, ctx, *, query):
         """Search Urbandictionary for a definition.
         
@@ -119,9 +120,12 @@ class General(commands.Cog):
         if len(choices) < 2:
             await ctx.send("You need to send at least 2 arguments!")
             return
-        await ctx.send(random.choice(choices).strip() + ", of course!")
+        picked = random.choice(choices).strip()
+        cleaned = discord.utils.escape_mentions(picked)
+        await ctx.send(cleaned + ", of course!")
 
     @commands.command()
+    @commands.cooldown(10, 60, commands.BucketType.guild)
     async def jpeg(self, ctx):
         """Basically needsmorejpeg.
 
@@ -188,6 +192,7 @@ class General(commands.Cog):
         return embed
 
     @commands.command()
+    @commands.cooldown(10, 60, commands.BucketType.guild)
     async def weather(self, ctx, place, state=None, country=None):
         """Sends weather info of a location.
 

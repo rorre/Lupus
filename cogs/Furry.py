@@ -70,6 +70,7 @@ class Furry(commands.Cog):
 
     @commands.command()
     @commands.check(checks.is_nsfw)
+    @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e621(self, ctx, *, tags):
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
@@ -87,6 +88,7 @@ class Furry(commands.Cog):
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()
+    @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e926(self, ctx, *, tags):
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
@@ -108,6 +110,7 @@ class Furry(commands.Cog):
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()
+    @commands.cooldown(20, 60, commands.BucketType.guild)
     async def randompick(self, ctx):
         query = "score:>25"
         if not checks.is_nsfw(ctx):
@@ -123,6 +126,7 @@ class Furry(commands.Cog):
         await ctx.send(embed=self._generate_esix_embed(picked))
 
     @commands.command()
+    @commands.cooldown(30, 60, commands.BucketType.guild)
     async def show(self, ctx, post: str):
         if not post.isdigit():
             re_result = re_esix.search(post)

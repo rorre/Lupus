@@ -4,7 +4,7 @@ import traceback
 import aiohttp
 from discord.ext import commands
 
-cogs = ["cogs.Furry", "cogs.General"]
+cogs = ["cogs.Furry", "cogs.General", "cogs.Server"]
 
 
 class FurBot(commands.Bot):
@@ -44,7 +44,7 @@ class FurBot(commands.Bot):
         if isinstance(error, ignored):
             return
         elif isinstance(error, commands.UserInputError):
-            return await ctx.send_help(entity=ctx.command)
+            return await ctx.send_help(ctx.command)
         elif isinstance(error, commands.CommandOnCooldown):
             return await ctx.send(f"Rate limited. Try again in `{error.retry_after}` seconds.")
         elif isinstance(error, commands.CommandInvokeError):
