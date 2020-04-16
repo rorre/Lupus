@@ -100,6 +100,13 @@ class General(commands.Cog):
             return await ctx.send(str(e))
         await ctx.send(embed=self._generate_weather_embed(weather))
 
+    @commands.command()
+    async def inspire(self, ctx):
+        """Gets inspiration from InspiroBot."""
+        async with self.bot.aiohttp_session.get(self.INSPIROBOT_URL) as res:
+            if res.status != 200:
+                return await ctx.send("No response from inspirobot.")
+            return await ctx.send(await res.text())
 
 def setup(bot):
     bot.add_cog(General(bot))

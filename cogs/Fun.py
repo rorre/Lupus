@@ -4,7 +4,7 @@ import string
 import typing
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
-
+from typing import Optional
 import discord
 from discord.ext import commands
 from PIL import Image
@@ -86,11 +86,19 @@ class Fun(commands.Cog):
         await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
     @commands.command()
-    async def inspire(self, ctx):
-        async with self.bot.aiohttp_session.get(self.INSPIROBOT_URL) as res:
-            if res.status != 200:
-                return await ctx.send("No response from inspirobot.")
-            return await ctx.send(await res.text())
+    async def someone(self, ctx, requires_role : Optional[discord.Role] = None, *message):
+        """Picks someone from list of members with extra message.
+        'requires_role' is to filter the members. That means only members with mentioned role can get picked.
+        'message' is the extra message to input after the user."""
+        guild_members = ctx.guild.members
+        if requires_role:
+            members = list(filter(lambda x: requires_role in x.roles, guild_members))
+        else:
+            members = guild_members
+        member = random.choice(members)
+        message = ' '.join(message)
+        await ctx.send(f"{member.display_name} {message}")
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))

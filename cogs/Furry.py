@@ -124,6 +124,7 @@ class Furry(commands.Cog):
     @commands.command()
     @commands.cooldown(30, 60, commands.BucketType.guild)
     async def show(self, ctx, post: str):
+        """Shows a post from given URL/ID"""
         if not post.isdigit():
             re_result = re_esix.search(post)
             if not re_result:

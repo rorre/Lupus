@@ -28,8 +28,8 @@ class Miscellaneous(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def status(self, ctx):
-        """Current bot status"""
+    async def stats(self, ctx):
+        """Current bot stats."""
         process = psutil.Process(os.getpid())
         memory_usage = process.memory_info().rss / 1024 / 1024
         cpu_usage = process.cpu_percent()

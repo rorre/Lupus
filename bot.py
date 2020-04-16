@@ -2,6 +2,7 @@ import sys
 import traceback
 
 import aiohttp
+import discord
 from discord.ext import commands
 
 cogs = [
@@ -26,6 +27,11 @@ class FurBot(commands.Bot):
                         cog, exc
                     )
                 )
+
+    async def on_ready(self):
+        print("Running!")
+        presence = discord.Game(name="f!help")
+        await self.change_presence(activity=presence)
 
     async def find_channel(self, guild):
         """Automatically find suitable channel to send, this is invoked for `on_guild_join(guild)`"""

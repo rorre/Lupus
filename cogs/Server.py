@@ -10,6 +10,7 @@ class Server(commands.Cog):
 
     @commands.command(name="user")
     async def userinfo(self, ctx, member: discord.Member):
+        """Show info about pinged user."""
         role_str = []
         for role in member.roles:
             role_str.append(role.name)
@@ -40,6 +41,7 @@ class Server(commands.Cog):
 
     @commands.command(name="server")
     async def serverinfo(self, ctx):
+        """Show info about current server."""
         guild = ctx.guild
         owner = guild.owner.mention if guild.owner else ""
         desc = f"**ID**: `{guild.id}`\r" \
