@@ -86,6 +86,7 @@ class Fun(commands.Cog):
         await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
     @commands.command()
+    @commands.guild_only()
     async def someone(self, ctx, requires_role : Optional[discord.Role] = None, *message):
         """Picks someone from list of members with extra message.
         'requires_role' is to filter the members. That means only members with mentioned role can get picked.
