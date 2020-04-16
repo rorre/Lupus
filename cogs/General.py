@@ -15,16 +15,6 @@ from apis.Urbandictionary import UrbanClient
 
 
 class General(commands.Cog):
-    """General/fun stuffs.
-
-    Commands:
-        about      Well uhh, the bot's info, of course...
-        avatar     Sends avatar link of mentioned user.
-        choose     Choose one of a lot arguments.
-        roll       Roll a number from 1 to n.
-        urban      Search Urbandictionary for a definition.
-        weather    Sends weather of a location"""
-
     def __init__(self, bot):
         self.bot = bot
         self.urban_client = UrbanClient(
@@ -33,22 +23,10 @@ class General(commands.Cog):
             config.owm_key,
             session=self.bot.aiohttp_session,
             loop=self.bot.loop)
-        self.thread_pool = ThreadPoolExecutor()
-
-    def _generate_random_name(self, n):
-        return "".join(
-            random.SystemRandom().choice(string.ascii_uppercase + string.digits)
-            for _ in range(n)
-        )
-
-    def _process_image(self, name):
-        Image.open("tmp/" + name).save("tmp/more-" + name, "JPEG", quality=1)
 
     @commands.command(pass_context=True)
     async def avatar(self, ctx, users: commands.Greedy[discord.User]):
-        """Sends avatar link of mentioned users.
-        
-        Usage: f!avatar <user1> <user2> <user3> <user4> ..."""
+        """Sends avatar link of mentioned users."""
         res = "Avatar URL for:\r"
         for user in users:
             res += f"- {user.name}: {user.avatar_url_as(format='png')}\r"
@@ -57,9 +35,7 @@ class General(commands.Cog):
     @commands.command(pass_context=True)
     @commands.cooldown(30, 60, commands.BucketType.guild)
     async def urban(self, ctx, *, query):
-        """Search Urbandictionary for a definition.
-        
-        Usage: f!urban <term>"""
+        """Search Urbandictionary for a definition."""
         results = await self.urban_client.search_term(query)
         if not results:
             return await ctx.send("No results found!")
@@ -83,89 +59,6 @@ class General(commands.Cog):
             "👎 " + str(best.thumbs_down)
         )
         await ctx.send(embed=embed)
-
-    @commands.command()
-    async def about(self, ctx):
-        """Well uhh, the bot's info, of course..."""
-        embed = discord.Embed(colour=discord.Colour(0x4A90E2))
-
-        embed.add_field(
-            name="Author",
-            value="-Keitaro/rorre/Error- // [Github](https://github.com/rorre) // [Twitter](https://twitter.com/osuRen_)",
-            inline=False,
-        )
-        embed.add_field(name="Library", value="Discord.py", inline=False)
-        embed.add_field(
-            name="Repository",
-            value="[https://github.com/rorre/Furbot](https://github.com/rorre/Furbot)",
-            inline=False,
-        )
-
-        await ctx.send(embed=embed)
-
-    @commands.command()
-    async def choose(self, ctx, *, args):
-        """Choose one of a lot arguments.
-
-        Arguments:
-        `*args` : list
-        The message but its splitted to a list.
-
-        Usage:
-        `f!choose <arg1> | <arg2> | <arg3> | ...`"""
-        choices = args.split("|")
-        for i in range(len(choices)):
-            if not choices[i].strip():
-                return await ctx.send(f"Argument number {i+1} is invalid.")
-        if len(choices) < 2:
-            await ctx.send("You need to send at least 2 arguments!")
-            return
-        picked = random.choice(choices).strip()
-        cleaned = discord.utils.escape_mentions(picked)
-        await ctx.send(cleaned + ", of course!")
-
-    @commands.command()
-    @commands.cooldown(10, 60, commands.BucketType.guild)
-    async def jpeg(self, ctx):
-        """Basically needsmorejpeg.
-
-        Usage: Send an image wiyh f!jpeg as description"""
-        embeds = ctx.message.attachments
-        images = []
-        filenames = []
-
-        if not os.path.exists("tmp"):
-            os.makedirs("tmp")
-
-        if not embeds:
-            return await ctx.send("Please send me an image with `f!jpeg` as description!")
-
-        for embed in embeds:
-            name = self._generate_random_name(10) + ".jpg"
-            await embed.save("tmp/" + name)
-
-            await self.bot.loop.run_in_executor(
-                self.thread_pool, partial(self._process_image, name)
-            )
-
-            filenames.append("tmp/more-" + name)
-            filenames.append("tmp/" + name)
-            images.append(discord.File("tmp/more-" + name))
-        await ctx.send("Done!", files=images)
-
-        try:
-            for fil in filenames:
-                os.remove(fil)
-        except BaseException:
-            pass
-
-    @commands.command()
-    async def roll(self, ctx, n : typing.Optional[int] = 10):
-        """Roll a number from 1 to n.
-        
-        Usage: f!roll <n>"""
-        res = random.randint(1, n)
-        await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
     def _generate_weather_embed(self, w):
         weather = w.weather[0]
@@ -194,10 +87,7 @@ class General(commands.Cog):
     @commands.command()
     @commands.cooldown(10, 60, commands.BucketType.guild)
     async def weather(self, ctx, place, state=None, country=None):
-        """Sends weather info of a location.
-
-        Usage: f!weather <place> [(<state>) <country code>]
-        Anything in brackets are optional. But recommended for more accurate result."""
+        """Sends weather info of a location."""
         if state:
             place += "," + state
         if country:

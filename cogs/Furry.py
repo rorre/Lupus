@@ -13,14 +13,6 @@ re_esix = re.compile(ESIX_REGEX)
 
 
 class Furry(commands.Cog):
-    """What every furries need.
-
-    Commands:
-        e621       Searches e621 with given queries.
-        e926       Searches e926 with given queries.
-        randompick Output random result from e621/e926.
-        show       Show a post from e621/e926 with given post ID"""
-
     def __init__(self, bot):
         self.bot = bot
         self.client = AsyncYippiClient(
@@ -72,6 +64,7 @@ class Furry(commands.Cog):
     @commands.check(checks.is_nsfw)
     @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e621(self, ctx, *, tags):
+        """Pulls random post from e621 with given tags."""
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
             return
@@ -90,6 +83,7 @@ class Furry(commands.Cog):
     @commands.command()
     @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e926(self, ctx, *, tags):
+        """Pulls random post from e926 with given tags."""
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
             return
@@ -111,7 +105,9 @@ class Furry(commands.Cog):
 
     @commands.command()
     @commands.cooldown(20, 60, commands.BucketType.guild)
-    async def randompick(self, ctx):
+    async def random(self, ctx):
+        """Gets random result from e621.
+        If channel is not marked with nsfw, rating will always be safe."""
         query = "score:>25"
         if not checks.is_nsfw(ctx):
             query += " rating:s"
