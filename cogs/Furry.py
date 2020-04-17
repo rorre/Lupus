@@ -15,8 +15,7 @@ re_esix = re.compile(ESIX_REGEX)
 class Furry(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.client = AsyncYippiClient(
-            "FurBot", "1.0", "Error-", loop=self.bot.loop)
+        self.client = AsyncYippiClient("FurBot", "1.0", "Error-", loop=self.bot.loop)
 
     def _is_deleted(self, post):
         return post.flags["deleted"]
@@ -32,8 +31,11 @@ class Furry(commands.Cog):
             tags_string = tags_string[:1000] + "... (*truncated*)"
 
         ratings = {"e": "Explicit", "q": "Questionable/Mature", "s": "Safe"}
-        colors = {"e": discord.Colour(0xA31014), "q": discord.Colour(
-            0xadaa07), "s": discord.Colour(0xeb612)}
+        colors = {
+            "e": discord.Colour(0xA31014),
+            "q": discord.Colour(0xADAA07),
+            "s": discord.Colour(0xEB612),
+        }
         embed = discord.Embed(colour=colors.get(post.rating))
 
         embed.set_image(url=post.sample["url"])
@@ -41,14 +43,11 @@ class Furry(commands.Cog):
         embed.set_author(name=f"Post #{post.id}")
 
         embed.add_field(
-            name="Artist",
-            value=f"`{' '.join(post.tags['artist'])}`",
-            inline=True)
-        embed.add_field(name="Rating", value=ratings.get(
-            post.rating), inline=True)
+            name="Artist", value=f"`{' '.join(post.tags['artist'])}`", inline=True
+        )
+        embed.add_field(name="Rating", value=ratings.get(post.rating), inline=True)
         embed.add_field(name="Tags", value=f"`{tags_string}`", inline=False)
-        embed.add_field(name="Full Image URL",
-                        value=post.file["url"], inline=False)
+        embed.add_field(name="Full Image URL", value=post.file["url"], inline=False)
 
         return embed
 
@@ -70,11 +69,11 @@ class Furry(commands.Cog):
             return
         if "score:" not in tags:
             tags += " score:>25"
-        
+
         posts = await self._cached_search_query(tags, limit=320)
         if not posts:
             return await ctx.send("No results found!")
-        
+
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -87,17 +86,17 @@ class Furry(commands.Cog):
         if "order:score_asc" in tags:
             await ctx.send("Nope.")
             return
-        
+
         tags = tags.replace("rating:e", "").replace("rating:q", "")
         if "score:" not in tags:
             tags += " score:>25"
         if "rating:" not in tags:
             tags += " rating:s"
-        
+
         posts = await self._cached_search_query(tags, limit=320)
         if not posts:
             return await ctx.send("No results found!")
-        
+
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -111,11 +110,13 @@ class Furry(commands.Cog):
         query = "score:>25"
         if not checks.is_nsfw(ctx):
             query += " rating:s"
-        
-        posts = await self._cached_search_query(query, limit=320, page=random.randint(1, 301))
+
+        posts = await self._cached_search_query(
+            query, limit=320, page=random.randint(1, 301)
+        )
         if not posts:
             return await ctx.send("Somehow I can't get anything from esix...")
-        
+
         picked = random.choice(posts)
         while self._is_deleted(picked):
             picked = random.choice(posts)
@@ -130,7 +131,7 @@ class Furry(commands.Cog):
             if not re_result:
                 return await ctx.send("Send URL or Post ID!")
             post = re_result[1]
-        
+
         try:
             picked = await self._cached_search_post(post)
         except BaseException:

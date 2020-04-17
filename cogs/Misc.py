@@ -10,6 +10,8 @@ start_time = time.time()
 MINUTE = 60
 HOUR = 60 * MINUTE
 DAY = 24 * HOUR
+
+
 def timedelta(start, end):
     delta = int(end - start)
 
@@ -22,6 +24,7 @@ def timedelta(start, end):
     seconds = delta % 60
 
     return f"{days}d:{hours}h:{minutes}m:{seconds}s"
+
 
 class Miscellaneous(commands.Cog):
     def __init__(self, bot):
@@ -40,20 +43,19 @@ class Miscellaneous(commands.Cog):
         current_time = time.time()
         delta = timedelta(start_time, current_time)
 
-        embed_body = f"**Memory usage**: `{int(memory_usage)}MB`\r" \
-            + f"**CPU**: `{cpu_usage}%`\r" \
-            + f"**Joined guilds**: `{joined_guilds}`\r" \
-            + f"**Users served**: `{served_users}`\r" \
+        embed_body = (
+            f"**Memory usage**: `{int(memory_usage)}MB`\r"
+            + f"**CPU**: `{cpu_usage}%`\r"
+            + f"**Joined guilds**: `{joined_guilds}`\r"
+            + f"**Users served**: `{served_users}`\r"
             + f"**Uptime**: `{delta}`\r"
+        )
 
         embed = discord.Embed(
-            title="Stats",
-            colour=discord.Colour(0x3a79b8),
-            description=embed_body
+            title="Stats", colour=discord.Colour(0x3A79B8), description=embed_body
         )
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         await ctx.send(embed=embed)
-
 
     @commands.command()
     async def about(self, ctx):
@@ -83,14 +85,19 @@ class Miscellaneous(commands.Cog):
             kick_members=True,
             ban_members=True,
             add_reactions=True,
-            manage_messages=True
+            manage_messages=True,
         )
         oauth = discord.utils.oauth_url(cid, permissions=permissions)
-        desc = "Thank you for your interest in inviting this bot to other server!\r" \
+        desc = (
+            "Thank you for your interest in inviting this bot to other server!\r"
             + f"[Invite URL]({oauth})"
-        embed = discord.Embed(title="Invite", colour=discord.Colour(0x4A90E2), description=desc)
+        )
+        embed = discord.Embed(
+            title="Invite", colour=discord.Colour(0x4A90E2), description=desc
+        )
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))

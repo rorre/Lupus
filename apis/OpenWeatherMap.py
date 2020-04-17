@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 import aiohttp
 from cachetools import cached, TTLCache
 
+
 class RateLimitedException(Exception):
     pass
 
@@ -15,28 +16,28 @@ class OWMException(Exception):
 
 class Weather:
     def __init__(self, js):
-        self.coord: dict = js.get('coord', None)
-        self.weather: List = js.get('weather', [])
-        self.base: str = js.get('base', None)
-        self.main: dict = js.get('main', None)
-        self.visibility: int = js.get('visibility', None)
-        self.wind: dict = js.get('wind', None)
-        self.clouds: dict = js.get('clouds', None)
-        self.dt: int = js.get('dt', None)
-        self.sys: dict = js.get('sys', None)
-        self.timezone: int = js.get('timezone', None)
-        self.id: int = js.get('id', None)
-        self.name: str = js.get('name', None)
-        self.cod: int = js.get('cod', None)
+        self.coord: dict = js.get("coord", None)
+        self.weather: List = js.get("weather", [])
+        self.base: str = js.get("base", None)
+        self.main: dict = js.get("main", None)
+        self.visibility: int = js.get("visibility", None)
+        self.wind: dict = js.get("wind", None)
+        self.clouds: dict = js.get("clouds", None)
+        self.dt: int = js.get("dt", None)
+        self.sys: dict = js.get("sys", None)
+        self.timezone: int = js.get("timezone", None)
+        self.id: int = js.get("id", None)
+        self.name: str = js.get("name", None)
+        self.cod: int = js.get("cod", None)
 
 
 class Forecast:
     def __init__(self, js):
-        self.cod: str = js.get('cod', None)
-        self.message: int = js.get('message', None)
-        self.cnt: int = js.get('cnt', None)
-        self.forecasts: List = list(map(Weather, js.get('list', [])))
-        self.city: dict = js.get('city', None)
+        self.cod: str = js.get("cod", None)
+        self.message: int = js.get("message", None)
+        self.cnt: int = js.get("cnt", None)
+        self.forecasts: List = list(map(Weather, js.get("list", [])))
+        self.city: dict = js.get("city", None)
 
 
 class OWMClient:
@@ -59,7 +60,7 @@ class OWMClient:
             if code != 200:
                 if js.get("cod") == 429:
                     raise RateLimitedException("Limit already passed.")
-                raise OWMException(js.get('message', "Server tripped."))
+                raise OWMException(js.get("message", "Server tripped."))
             return js
 
     def _generate_query_keys(self, **kwargs) -> str:

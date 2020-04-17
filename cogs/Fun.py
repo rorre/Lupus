@@ -39,7 +39,9 @@ class Fun(commands.Cog):
             os.makedirs("tmp")
 
         if not attachments:
-            return await ctx.send("Please send me an image with `f!jpeg` as description!")
+            return await ctx.send(
+                "Please send me an image with `f!jpeg` as description!"
+            )
 
         for attachment in attachments:
             if attachment.filename.split(".")[-1] not in ("jpg", "png"):
@@ -54,7 +56,7 @@ class Fun(commands.Cog):
             filenames.append("tmp/more-" + name)
             filenames.append("tmp/" + name)
             images.append(discord.File("tmp/more-" + name))
-        
+
         if not images:
             return await ctx.send("Please send valid image!")
         await ctx.send("Done!", files=images)
@@ -80,7 +82,7 @@ class Fun(commands.Cog):
         await ctx.send(cleaned + ", of course!")
 
     @commands.command()
-    async def roll(self, ctx, n : typing.Optional[int] = 10):
+    async def roll(self, ctx, n: typing.Optional[int] = 10):
         """Roll a number from 1 to n."""
         res = random.randint(1, n)
         await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
@@ -89,10 +91,26 @@ class Fun(commands.Cog):
     async def eight_ball(self, ctx):
         """Rolls a magic 8-ball."""
         answers = [
-            "Certainly.", "No doubt!", "Yes - definitely.", "Most likely.", "Yes.",
-            "Probably.", "Maybe.", "Could be.", "Possibly.", "There's a chance.",
-            "idk.", "Can't tell.", "Unsure.", "Ask again later.", "Dunno.",
-            "No.", "Obviously not.", "I doubt it.", "Nope.", "Doesn't look good."
+            "Certainly.",
+            "No doubt!",
+            "Yes - definitely.",
+            "Most likely.",
+            "Yes.",
+            "Probably.",
+            "Maybe.",
+            "Could be.",
+            "Possibly.",
+            "There's a chance.",
+            "idk.",
+            "Can't tell.",
+            "Unsure.",
+            "Ask again later.",
+            "Dunno.",
+            "No.",
+            "Obviously not.",
+            "I doubt it.",
+            "Nope.",
+            "Doesn't look good.",
         ]
         await ctx.send(random.choice(answers))
 

@@ -17,12 +17,10 @@ from apis.Urbandictionary import UrbanClient
 class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.urban_client = UrbanClient(
-            self.bot.aiohttp_session, self.bot.loop)
+        self.urban_client = UrbanClient(self.bot.aiohttp_session, self.bot.loop)
         self.owm_client = OWMClient(
-            config.owm_key,
-            session=self.bot.aiohttp_session,
-            loop=self.bot.loop)
+            config.owm_key, session=self.bot.aiohttp_session, loop=self.bot.loop
+        )
 
     @commands.command(pass_context=True)
     async def avatar(self, ctx, users: commands.Greedy[discord.User]):
@@ -55,8 +53,7 @@ class General(commands.Cog):
         embed.add_field(name="Definition", value=best.definition, inline=False)
         embed.add_field(name="Example", value=best.example, inline=True)
         embed.set_footer(
-            text="👍 " + str(best.thumbs_up) + " | " +
-            "👎 " + str(best.thumbs_down)
+            text="👍 " + str(best.thumbs_up) + " | " + "👎 " + str(best.thumbs_down)
         )
         await ctx.send(embed=embed)
 
@@ -64,23 +61,30 @@ class General(commands.Cog):
         weather = w.weather[0]
         embed = discord.Embed(
             title=f"Weather for {w.name}, {w.sys['country']} :flag_{w.sys['country'].lower()}:",
-            colour=discord.Colour(0x6da1f8),
+            colour=discord.Colour(0x6DA1F8),
             description=f"**{weather['main']}** ({weather['description']})\r\n**Temperature**: {w.main['temp']}°C (Feels like {w.main['feels_like']}°)\r\n**Humidity**: {w.main['humidity']}%",
-            timestamp=datetime.utcfromtimestamp(
-                w.dt))
+            timestamp=datetime.utcfromtimestamp(w.dt),
+        )
 
         embed.set_thumbnail(
-            url=f"http://openweathermap.org/img/wn/{weather['icon']}@2x.png")
+            url=f"http://openweathermap.org/img/wn/{weather['icon']}@2x.png"
+        )
         embed.set_footer(
             text="Gathered from OpenWeatherMap",
-            icon_url="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png")
+            icon_url="https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png",
+        )
 
+        embed.add_field(name="Wind", value=f"{w.wind['speed']} m/s, ({w.wind['deg']})")
         embed.add_field(
-            name="Wind", value=f"{w.wind['speed']} m/s, ({w.wind['deg']})")
-        embed.add_field(name="Sunrise", value=datetime.fromtimestamp(
-            w.sys['sunrise']).isoformat(" "), inline=True)
-        embed.add_field(name="Sunset", value=datetime.fromtimestamp(
-            w.sys['sunset']).isoformat(" "), inline=True)
+            name="Sunrise",
+            value=datetime.fromtimestamp(w.sys["sunrise"]).isoformat(" "),
+            inline=True,
+        )
+        embed.add_field(
+            name="Sunset",
+            value=datetime.fromtimestamp(w.sys["sunset"]).isoformat(" "),
+            inline=True,
+        )
 
         return embed
 
@@ -107,6 +111,7 @@ class General(commands.Cog):
             if res.status != 200:
                 return await ctx.send("No response from inspirobot.")
             return await ctx.send(await res.text())
+
 
 def setup(bot):
     bot.add_cog(General(bot))
