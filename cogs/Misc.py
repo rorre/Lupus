@@ -76,6 +76,7 @@ class Miscellaneous(commands.Cog):
 
     @commands.command()
     async def invite(self, ctx):
+        """Gets an invite link for the bot."""
         cid = self.bot.appinfo.id
         permissions = discord.Permissions.text()
         permissions.update(

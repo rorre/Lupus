@@ -90,6 +90,7 @@ class Server(commands.Cog, name="Server Only"):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, members : commands.Greedy[discord.Member], *, reason="No reason provided."):
+        """Kicks member(s)."""
         if not ctx.channel.permissions_for(ctx.me).kick_members:
             return await ctx.send("I don't have permissions to kick members!")
         if len(members) == 0:
