@@ -1,9 +1,10 @@
+import os
+import time
+
 import discord
 from discord.ext import commands
 
 import psutil
-import os
-import time
 
 start_time = time.time()
 

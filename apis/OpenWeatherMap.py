@@ -3,7 +3,8 @@ from typing import List
 from urllib.parse import urlencode
 
 import aiohttp
-from cachetools import cached, TTLCache
+
+from cachetools import TTLCache, cached
 
 
 class RateLimitedException(Exception):

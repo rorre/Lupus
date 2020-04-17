@@ -1,12 +1,13 @@
-import random
-import discord
-from discord.ext import commands
-from typing import Optional
-from datetime import datetime
-import asyncio
 import argparse
-from dateutil import parser as date_parser
+import asyncio
+import random
 import shlex
+from datetime import datetime
+from typing import Optional
+
+import discord
+from dateutil import parser as date_parser
+from discord.ext import commands
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--before")
