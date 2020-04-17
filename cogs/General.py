@@ -1,13 +1,6 @@
-import os
-import random
-import string
-from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
-from functools import partial
-import typing
 import discord
 from discord.ext import commands
-from PIL import Image
 
 import config
 from apis.OpenWeatherMap import OWMClient, OWMException, RateLimitedException

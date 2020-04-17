@@ -1,2 +1,5 @@
 pillow
 discord.py
+aiohttp
+cachetools
+psutil

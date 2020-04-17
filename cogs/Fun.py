@@ -4,7 +4,6 @@ import string
 import typing
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
-from typing import Optional
 import discord
 from discord.ext import commands
 from PIL import Image
