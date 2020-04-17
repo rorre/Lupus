@@ -51,14 +51,15 @@ class Miscellaneous(commands.Cog):
             colour=discord.Colour(0x3a79b8),
             description=embed_body
         )
+        embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         await ctx.send(embed=embed)
 
 
     @commands.command()
     async def about(self, ctx):
         """Well, the bot's info, of course..."""
-        embed = discord.Embed(colour=discord.Colour(0x4A90E2))
-
+        embed = discord.Embed(title="About", colour=discord.Colour(0x4A90E2))
+        embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         embed.add_field(
             name="Author",
             value="-Keitaro/rorre/Error- // [Github](https://github.com/rorre) // [Twitter](https://twitter.com/osuRen_)",
@@ -67,10 +68,27 @@ class Miscellaneous(commands.Cog):
         embed.add_field(name="Library", value="Discord.py", inline=False)
         embed.add_field(
             name="Repository",
-            value="[https://github.com/rorre/Furbot](https://github.com/rorre/Furbot)",
+            value="[https://git.rorre.xyz/rorre/Furbot](https://git.rorre.xyz/rorre/Furbot)",
             inline=False,
         )
 
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def invite(self, ctx):
+        cid = self.bot.appinfo.id
+        permissions = discord.Permissions.text()
+        permissions.update(
+            kick_members=True,
+            ban_members=True,
+            add_reactions=True,
+            manage_roles=True
+        )
+        oauth = discord.utils.oauth_url(cid, permissions=permissions)
+        desc = "Thank you for your interest in inviting this bot to other server!\r" \
+            + f"[Invite URL]({oauth})"
+        embed = discord.Embed(title="Invite", colour=discord.Colour(0x4A90E2), description=desc)
+        embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         await ctx.send(embed=embed)
 
 def setup(bot):

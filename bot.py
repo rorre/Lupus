@@ -30,6 +30,7 @@ class FurBot(commands.Bot):
 
     async def on_ready(self):
         print("Running!")
+        self.appinfo = await self.application_info()
         presence = discord.Game(name="f!help")
         await self.change_presence(activity=presence)
 
