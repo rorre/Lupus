@@ -83,7 +83,7 @@ class Miscellaneous(commands.Cog):
             kick_members=True,
             ban_members=True,
             add_reactions=True,
-            manage_roles=True
+            manage_messages=True
         )
         oauth = discord.utils.oauth_url(cid, permissions=permissions)
         desc = "Thank you for your interest in inviting this bot to other server!\r" \
