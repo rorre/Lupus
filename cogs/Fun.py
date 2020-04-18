@@ -10,6 +10,7 @@ from discord.ext import commands
 
 from PIL import Image
 
+from helper import generate_random_name
 
 class Fun(commands.Cog):
     INSPIROBOT_URL = "https://inspirobot.me/api?generate=true"
@@ -17,12 +18,6 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thread_pool = ThreadPoolExecutor()
-
-    def _generate_random_name(self, n):
-        return "".join(
-            random.SystemRandom().choice(string.ascii_uppercase + string.digits)
-            for _ in range(n)
-        )
 
     def _process_image(self, name):
         Image.open("tmp/" + name).save("tmp/more-" + name, "JPEG", quality=1)
@@ -47,7 +42,7 @@ class Fun(commands.Cog):
         for attachment in attachments:
             if attachment.filename.split(".")[-1] not in ("jpg", "png"):
                 continue
-            name = self._generate_random_name(10) + ".jpg"
+            name = generate_random_name(10) + ".jpg"
             await attachment.save("tmp/" + name)
 
             await self.bot.loop.run_in_executor(

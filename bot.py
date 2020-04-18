@@ -5,7 +5,7 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-cogs = ["cogs.Fun", "cogs.Furry", "cogs.General", "cogs.Misc", "cogs.Reminder", "cogs.Server"]
+cogs = ["cogs.Fun", "cogs.Furry", "cogs.General", "cogs.Math", "cogs.Misc", "cogs.Reminder", "cogs.Server"]
 
 
 class FurBot(commands.Bot):
@@ -67,6 +67,10 @@ class FurBot(commands.Bot):
                     error.__class__.__name__, ctx.command.name
                 )
             )
+
+    async def close(self):
+        await self.aiohttp_session.close()
+        await super().close()
 
 
 bot = FurBot()

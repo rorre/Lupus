@@ -15,6 +15,9 @@ psutil = "^5.7.0"
 yippi = {git = "https://git.rorre.xyz/ren/Yippi.git"}
 motor = "^2.1.0"
 umongo = "^2.2.0"
+sympy = "^1.5.1"
+cython = "^0.29.16"
+matplotlib = "^3.2.1"
 
 [tool.poetry.dev-dependencies]
 

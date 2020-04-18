@@ -24,6 +24,10 @@ class Reminder(commands.Cog):
         if uid:
             kwargs = {"user_id": uid}
         return ReminderDB.find(kwargs)
+
+    async def _cleanup(self, reminder):
+        self.tasks.pop(str(reminder.id))
+        await reminder.delete()
     
     def send_reminder(self, reminder, error=None):
         if error:
@@ -40,29 +44,39 @@ class Reminder(commands.Cog):
 
 
         async def send():
-            channel = await self.bot.fetch_channel(reminder.channel_id)
-            if not channel:
+            # TODO: Somehow make em tidier
+            # Fetch the user, then the channel. If both of them doesn't exist,
+            # just cancel them, as there is no need to proceed since we can't send anyway.
+            try:
                 user = await self.bot.fetch_user(reminder.user_id)
-                target = user
+            except discord.HTTPException:
+                user = None
+            
+            try:
+                channel = await self.bot.fetch_channel(reminder.channel_id)
+            except discord.HTTPException:
+                if user:
+                    target = user
+                else:
+                    # Don't know what to do, just cancel it.
+                    return await self._cleanup(reminder)
             else:
-                user = await channel.guild.fetch_member(reminder.user_id)
+                target = channel
                 try:
                     await channel.fetch_message(reminder.message_id)
-                    target = channel
                 except discord.NotFound:
-                    return
-                except discord.Forbidden:
-                    target = user
+                    return await self._cleanup(reminder)
+                
+            reminder_str = f"{user.mention}\r:alarm_clock: Reminder! {reminder.content}"
+            if late:
+                reminder_str += f"\rSorry, I am late by {round(late_by, 2)}s :("
+            
             try:
-                reminder_str = f"{user.mention}\r:alarm_clock: Reminder! {reminder.content}"
-                if late:
-                    reminder_str += f"\rSorry, I am late by {round(late_by, 2)}s :("
                 await target.send(reminder_str)
             except discord.DiscordException:
                 pass
             finally:
-                self.tasks.pop(str(reminder.id))
-                await reminder.delete()
+                await self._cleanup(reminder)
 
         def callback():
             self.bot.loop.create_task(send())
