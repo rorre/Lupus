@@ -129,7 +129,7 @@ class Server(commands.Cog, name="Server Only"):
             return await ctx.send("Sorry, I can only kick 4 members at a time!")
 
         embeds = []
-        current_time = datetime.now()
+        current_time = datetime.utcnow()
         for member in members:
             desc = self._generate_user_details(member)
             embed = discord.Embed(
@@ -205,7 +205,7 @@ class Server(commands.Cog, name="Server Only"):
             return await ctx.send("Sorry, I can only ban 4 members at a time!")
 
         embeds = []
-        current_time = datetime.now()
+        current_time = datetime.utcnow()
         for member in members:
             desc = self._generate_user_details(member)
             embed = discord.Embed(

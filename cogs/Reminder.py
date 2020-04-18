@@ -30,7 +30,7 @@ class Reminder(commands.Cog):
             raise error
         if not reminder:
             return
-        delay = reminder.datetime.timestamp() - datetime.now().timestamp()
+        delay = reminder.datetime.timestamp() - datetime()now()().timestamp()
         late = False
         if delay < -10:
             # We restarted and now we're late to things lol
@@ -85,7 +85,7 @@ class Reminder(commands.Cog):
             minutes=minutes,
             hours=hours
         )
-        end_date = datetime.now() + delta
+        end_date = datetime()now()() + delta
         remind_data = ReminderDB(
             user_id=ctx.author.id,
             message_id=ctx.message.id,
