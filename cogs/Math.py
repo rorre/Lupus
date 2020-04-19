@@ -65,7 +65,7 @@ class Math(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    @commands.cooldown(20, 60, commands.BucketType.user)
+    @commands.cooldown(10, 60, commands.BucketType.user)
     async def solve(self, ctx, *, equations):
         """Solve basic math problem.
         
@@ -95,7 +95,7 @@ class Math(commands.Cog):
         await ctx.send(f"```{response}```")
     
     @commands.command()
-    @commands.cooldown(10, 60, commands.BucketType.user)
+    @commands.cooldown(5, 60, commands.BucketType.user)
     async def plot(self, ctx, *, equations):
         """Draws plots of given equation.
         
