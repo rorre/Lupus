@@ -88,6 +88,7 @@ class Reminder(commands.Cog):
     
     @commands.command()
     async def remind(self, ctx, eta, *, message):
+        "Remind you things after a certain time."
         eta = eta_re.match(eta)
         days = int(eta['days']) if eta['days'] else 0
         hours = int(eta['hours']) if eta['hours'] else 0
@@ -113,6 +114,7 @@ class Reminder(commands.Cog):
 
     @commands.command()
     async def remind_list(self, ctx):
+        "List of your running reminds."
         desc = "```ID                       | When (UTC)                 | Content\r"
         cursor = await self._get_existing(ctx.author.id).to_list(None)
         for reminder in cursor:
@@ -123,6 +125,7 @@ class Reminder(commands.Cog):
 
     @commands.command()
     async def remind_delete(self, ctx, _id):
+        "Cancel/delete running remind."
         try:
             _id = ObjectId(_id)
         except InvalidId:
