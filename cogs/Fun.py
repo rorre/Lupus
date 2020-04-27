@@ -7,10 +7,10 @@ from functools import partial
 
 import discord
 from discord.ext import commands
-
 from PIL import Image
 
 from helper import generate_random_name
+
 
 class Fun(commands.Cog):
     INSPIROBOT_URL = "https://inspirobot.me/api?generate=true"

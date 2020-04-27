@@ -2,9 +2,9 @@ import random
 import re
 
 import discord
+from cachetools import LRUCache, TTLCache, cached
 from discord.ext import commands
 
-from cachetools import LRUCache, TTLCache, cached
 from helper import checks
 from yippi import AsyncYippiClient
 

@@ -1,10 +1,20 @@
+import os
+import re
+from token import NAME
+
 import discord
 from discord.ext import commands
-from sympy.parsing.sympy_parser import stringify_expr, eval_expr, parse_expr, standard_transformations, convert_xor, convert_equals_signs, implicit_multiplication, split_symbols, function_exponentiation, implicit_application
+from sympy.parsing.sympy_parser import (convert_equals_signs, convert_xor,
+                                        eval_expr, function_exponentiation,
+                                        implicit_application,
+                                        implicit_multiplication, parse_expr,
+                                        split_symbols,
+                                        standard_transformations,
+                                        stringify_expr)
 from sympy.plotting import plot as sympy_plot
-import re, os
+
 from helper import generate_random_name
-from token import NAME
+
 block_re = re.compile(r"```(.+)```", flags=re.DOTALL)
 
 # START BLOCK
@@ -15,14 +25,15 @@ from sympy.solvers.diophantine import diophantine
 
 # From https://github.com/sympy/sympy_gamma/blob/master/app/logic/utils.py
 SYNONYMS = {
-    u'derivative': 'diff',
-    u'derive': 'diff',
-    u'integral': 'integrate',
-    u'antiderivative': 'integrate',
-    u'factorize': 'factor',
-    u'graph': 'plot',
-    u'draw': 'plot'
+    "derivative": "diff",
+    "derive": "diff",
+    "integral": "integrate",
+    "antiderivative": "integrate",
+    "factorize": "factor",
+    "graph": "plot",
+    "draw": "plot",
 }
+
 
 def synonyms(tokens, local_dict, global_dict):
     result = []
@@ -34,23 +45,31 @@ def synonyms(tokens, local_dict, global_dict):
         result.append(token)
     return result
 
+
 def custom_implicit_transformation(result, local_dict, global_dict):
-    for step in (split_symbols, implicit_multiplication,
-                 implicit_application, function_exponentiation):
+    for step in (
+        split_symbols,
+        implicit_multiplication,
+        implicit_application,
+        function_exponentiation,
+    ):
         result = step(result, local_dict, global_dict)
 
     return result
+
+
 # END BLOCK
 
 namespace = {}
 for exec_str in PREEXEC.splitlines():
     exec(exec_str, {}, namespace)
 
+
 def plot(*args):
     return "Please use `f!plot` instead."
-namespace.update({
-    'plot': plot
-})
+
+
+namespace.update({"plot": plot})
 
 transforms = [
     convert_equals_signs,
@@ -93,7 +112,7 @@ class Math(commands.Cog):
                 response += f"{e.__class__.__name__} occured."
             i += 1
         await ctx.send(f"```{response}```")
-    
+
     @commands.command()
     @commands.cooldown(5, 60, commands.BucketType.user)
     async def plot(self, ctx, *, equations):
@@ -105,7 +124,7 @@ class Math(commands.Cog):
             splitted_lines = list(
                 filter(
                     lambda x: not (bool(x) or "help" in x),
-                    matches.group(1).splitlines()
+                    matches.group(1).splitlines(),
                 )
             )
             if len(splitted_lines) > 5:
@@ -121,23 +140,24 @@ class Math(commands.Cog):
             evaluated = eval_expr(parsed, {}, namespace)
             e_plot = sympy_plot(evaluated, show=False)
             sympy_eqs.append(e_plot)
-        
+
         if not sympy_eqs:
             return await ctx.send("Please send at least one equation!")
-        
+
         base_plot = sympy_eqs[0]
         for e_plot in sympy_eqs:
             base_plot.extend(e_plot)
-        
+
         plot_path = "tmp/plot-" + generate_random_name(10) + ".png"
         base_plot.save(plot_path)
-        
+
         await ctx.send("Done!", file=discord.File(plot_path))
 
         try:
             os.remove(plot_path)
         except BaseException:
             pass
-        
+
+
 def setup(bot):
     bot.add_cog(Math(bot))

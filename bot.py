@@ -5,7 +5,15 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-cogs = ["cogs.Fun", "cogs.Furry", "cogs.General", "cogs.Math", "cogs.Misc", "cogs.Reminder", "cogs.Server"]
+cogs = [
+    "cogs.Fun",
+    "cogs.Furry",
+    "cogs.General",
+    "cogs.Math",
+    "cogs.Misc",
+    "cogs.Reminder",
+    "cogs.Server",
+]
 
 
 class FurBot(commands.Bot):
