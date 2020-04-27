@@ -13,6 +13,7 @@ cogs = [
     "cogs.Misc",
     "cogs.Reminder",
     "cogs.Server",
+    "cogs.Weeb",
 ]
 
 

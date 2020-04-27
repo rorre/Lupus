@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 import aiohttp
 
@@ -13,4 +14,5 @@ class NekoClient:
     async def get(self, endpoint):
         url = self.BASE_URL + endpoint
         async with self.session.get(url) as response:
-            return await response.json()
+            js_text = await response.text() or "{}"
+            return json.loads(js_text)
