@@ -17,7 +17,7 @@ cogs = [
 ]
 
 
-class FurBot(commands.Bot):
+class FurBot(commands.AutoShardedBot):
     def __init__(self, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned_or("f!"), **kwargs)
         self.aiohttp_session = aiohttp.ClientSession(loop=self.loop)

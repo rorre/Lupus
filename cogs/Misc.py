@@ -98,6 +98,14 @@ class Miscellaneous(commands.Cog):
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def ping(self, ctx):
+        """Sends back 'Pong!' with the bot's response time."""
+        start = time.time()
+        msg = await ctx.send("Pong!")
+        end = time.time()
+        await msg.edit(content=f"Pong! ({int((end - start) * 1000)}ms)")
+
 
 def setup(bot):
     bot.add_cog(Miscellaneous(bot))
