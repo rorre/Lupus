@@ -4,13 +4,18 @@ from token import NAME
 
 import discord
 from discord.ext import commands
-from sympy.parsing.sympy_parser import (convert_equals_signs, convert_xor,
-                                        eval_expr, function_exponentiation,
-                                        implicit_application,
-                                        implicit_multiplication, parse_expr,
-                                        split_symbols,
-                                        standard_transformations,
-                                        stringify_expr)
+from sympy.parsing.sympy_parser import (
+    convert_equals_signs,
+    convert_xor,
+    eval_expr,
+    function_exponentiation,
+    implicit_application,
+    implicit_multiplication,
+    parse_expr,
+    split_symbols,
+    standard_transformations,
+    stringify_expr,
+)
 from sympy.plotting import plot as sympy_plot
 
 from helper import generate_random_name
@@ -89,7 +94,6 @@ class Math(commands.Cog):
         """Solve basic math problem.
         
         If you want to do multiple equations, do it inside a code block, splitted by new lines."""
-        show_help = False
         matches = block_re.match(equations)
         if matches:
             splitted_lines = list(filter(None, matches.group(1).splitlines()))
