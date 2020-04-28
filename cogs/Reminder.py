@@ -26,7 +26,7 @@ def format_time(s):
     s %= MINUTE
     seconds = int(s % 60)
 
-    return f"{days}d:{hours}h:{minutes}m:{seconds}s"
+    return f"{days}d{hours}h{minutes}m{seconds}s"
 
 
 class Reminder(commands.Cog):
