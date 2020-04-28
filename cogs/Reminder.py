@@ -18,13 +18,13 @@ DAY = 24 * HOUR
 
 
 def format_time(s):
-    days = s // DAY
+    days = int(s // DAY)
     s %= DAY
-    hours = s // HOUR
+    hours = int(s // HOUR)
     s %= HOUR
-    minutes = s // 60
+    minutes = int(s // 60)
     s %= MINUTE
-    seconds = s % 60
+    seconds = int(s % 60)
 
     return f"{days}d:{hours}h:{minutes}m:{seconds}s"
 
