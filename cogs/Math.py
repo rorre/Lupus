@@ -11,7 +11,6 @@ from sympy.parsing.sympy_parser import (
     function_exponentiation,
     implicit_application,
     implicit_multiplication,
-    parse_expr,
     split_symbols,
     standard_transformations,
     stringify_expr,

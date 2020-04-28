@@ -15,7 +15,7 @@ re_esix = re.compile(ESIX_REGEX)
 class Furry(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.client = AsyncYippiClient("FurBot", "1.0", "Error-", loop=self.bot.loop)
+        self.client = AsyncYippiClient("Lupus", "1.0", "Error-", loop=self.bot.loop)
 
     def _is_deleted(self, post):
         return post.flags["deleted"]

@@ -1,4 +1,3 @@
-import asyncio
 import re
 from datetime import datetime, timedelta
 
@@ -12,6 +11,22 @@ from db.Reminder import Reminder as ReminderDB
 eta_re = re.compile(
     r"(?:(?P<days>\d+)d)?(?:(?P<hours>\d+)h)?(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?"
 )
+
+MINUTE = 60
+HOUR = 60 * MINUTE
+DAY = 24 * HOUR
+
+
+def format_time(s):
+    days = s // DAY
+    s %= DAY
+    hours = s // HOUR
+    s %= HOUR
+    minutes = s // 60
+    s %= MINUTE
+    seconds = s % 60
+
+    return f"{days}d:{hours}h:{minutes}m:{seconds}s"
 
 
 class Reminder(commands.Cog):
@@ -72,7 +87,7 @@ class Reminder(commands.Cog):
 
             reminder_str = f"{user.mention}\r:alarm_clock: Reminder! {reminder.content}"
             if late:
-                reminder_str += f"\rSorry, I am late by {round(late_by, 2)}s :("
+                reminder_str += f"\rSorry, I am late by {format_time(round(late_by, 2))} :("
 
             try:
                 await target.send(reminder_str)

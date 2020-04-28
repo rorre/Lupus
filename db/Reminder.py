@@ -1,4 +1,4 @@
-from umongo import Document, fields, validate
+from umongo import Document, fields
 
 from .Connection import mongo
 

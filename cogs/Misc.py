@@ -70,7 +70,7 @@ class Miscellaneous(commands.Cog):
         embed.add_field(name="Library", value="Discord.py", inline=False)
         embed.add_field(
             name="Repository",
-            value="[https://git.rorre.xyz/rorre/Furbot](https://git.rorre.xyz/rorre/Furbot)",
+            value="[GitHub](https://github.com/rorre/Lupus)",
             inline=False,
         )
 

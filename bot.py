@@ -17,9 +17,9 @@ cogs = [
 ]
 
 
-class FurBot(commands.AutoShardedBot):
+class Lupus(commands.AutoShardedBot):
     def __init__(self, **kwargs):
-        super().__init__(command_prefix=commands.when_mentioned_or("f!"), **kwargs)
+        super().__init__(command_prefix=commands.when_mentioned_or("w!"), **kwargs)
         self.aiohttp_session = aiohttp.ClientSession(loop=self.loop)
         for cog in cogs:
             try:
@@ -51,7 +51,7 @@ class FurBot(commands.AutoShardedBot):
             "Hello there, "
             + guild.name
             + "!\r"
-            + "I'm FurBot! If you want to try me out, go ahead check out the help! The command is `f!help`.\r\r"
+            + "I'm Lupus! If you want to try me out, go ahead check out the help! The command is `w!help`.\r\r"
             + "Thank you very much for using this bot!"
         )
 
@@ -82,7 +82,7 @@ class FurBot(commands.AutoShardedBot):
         await super().close()
 
 
-bot = FurBot()
+bot = Lupus()
 if __name__ == "__main__":
     import config
 
