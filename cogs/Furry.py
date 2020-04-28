@@ -108,7 +108,7 @@ class Furry(commands.Cog):
         """Gets random result from e621.
         If channel is not marked with nsfw, rating will always be safe."""
         query = "score:>25"
-        if not checks.is_nsfw(ctx):
+        if not await checks.is_nsfw(ctx):
             query += " rating:s"
 
         posts = await self._cached_search_query(
