@@ -64,13 +64,18 @@ class Miscellaneous(commands.Cog):
         embed.set_thumbnail(url=str(self.bot.user.avatar_url))
         embed.add_field(
             name="Author",
-            value="-Keitaro/rorre/Error- // [Github](https://github.com/rorre) // [Twitter](https://twitter.com/osuRen_)",
+            value="Keitaro#1274 // [Github](https://github.com/rorre)",
             inline=False,
         )
         embed.add_field(name="Library", value="Discord.py", inline=False)
         embed.add_field(
             name="Repository",
             value="[GitHub](https://github.com/rorre/Lupus)",
+            inline=False,
+        )
+        embed.add_field(
+            name="Support",
+            value="[PayPal](https://paypal.me/rendyak/)",
             inline=False,
         )
 

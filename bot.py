@@ -18,6 +18,7 @@ cogs = [
 
 
 class Lupus(commands.AutoShardedBot):
+    """Wolf (Canis lupus). A multifunction Discord bot."""
     def __init__(self, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned_or("w!"), **kwargs)
         self.aiohttp_session = aiohttp.ClientSession(loop=self.loop)
@@ -34,7 +35,7 @@ class Lupus(commands.AutoShardedBot):
     async def on_ready(self):
         print("Running!")
         self.appinfo = await self.application_info()
-        presence = discord.Game(name="f!help")
+        presence = discord.Game(name="w!help | w!about")
         await self.change_presence(activity=presence)
 
     async def find_channel(self, guild):
