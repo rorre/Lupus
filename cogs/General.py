@@ -9,6 +9,8 @@ from apis.Urbandictionary import UrbanClient
 
 
 class General(commands.Cog):
+    INSPIROBOT_URL = "https://inspirobot.me/api?generate=true"
+
     def __init__(self, bot):
         self.bot = bot
         self.urban_client = UrbanClient(self.bot.aiohttp_session, self.bot.loop)

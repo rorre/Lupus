@@ -113,7 +113,7 @@ class Reminder(commands.Cog):
         minutes = int(eta["minutes"]) if eta["minutes"] else 0
         seconds = int(eta["seconds"]) if eta["seconds"] else 0
         delta = timedelta(days=days, seconds=seconds, minutes=minutes, hours=hours)
-        end_date = datetime().utcnow() + delta
+        end_date = datetime.utcnow() + delta
         remind_data = ReminderDB(
             user_id=ctx.author.id,
             message_id=ctx.message.id,

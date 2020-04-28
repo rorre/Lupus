@@ -12,8 +12,6 @@ from helper import generate_random_name
 
 
 class Fun(commands.Cog):
-    INSPIROBOT_URL = "https://inspirobot.me/api?generate=true"
-
     def __init__(self, bot):
         self.bot = bot
         self.thread_pool = ThreadPoolExecutor()
