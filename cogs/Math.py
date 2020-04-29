@@ -112,7 +112,7 @@ class Math(commands.Cog):
             self.thread_pool, partial(self._do_equations, splitted_lines)
         )
         try:
-            await asyncio.wait_for(task, timeout=5.0)
+            response = await asyncio.wait_for(task, timeout=5.0)
         except asyncio.TimeoutError:
             return await ctx.send("Command timeout.")
 
