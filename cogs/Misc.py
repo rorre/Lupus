@@ -74,7 +74,9 @@ class Miscellaneous(commands.Cog):
             inline=False,
         )
         embed.add_field(
-            name="Support", value="[PayPal](https://paypal.me/rendyak/) // [Ko-fi](https://ko-fi.com/rorre)", inline=False,
+            name="Support",
+            value="[PayPal](https://paypal.me/rendyak/) // [Ko-fi](https://ko-fi.com/rorre)",
+            inline=False,
         )
 
         await ctx.send(embed=embed)

@@ -1,21 +1,14 @@
 import asyncio
 import re
-from token import NAME
 from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
+from token import NAME
 
 from discord.ext import commands
 from sympy.parsing.sympy_parser import (
-    convert_equals_signs,
-    convert_xor,
-    eval_expr,
-    function_exponentiation,
-    implicit_application,
-    implicit_multiplication,
-    split_symbols,
-    standard_transformations,
-    stringify_expr,
-)
+    convert_equals_signs, convert_xor, eval_expr, function_exponentiation,
+    implicit_application, implicit_multiplication, split_symbols,
+    standard_transformations, stringify_expr)
 
 block_re = re.compile(r"```(.+)```", flags=re.DOTALL)
 
@@ -122,9 +115,11 @@ class Math(commands.Cog):
             await asyncio.wait_for(task, timeout=5.0)
         except asyncio.TimeoutError:
             return await ctx.send("Command timeout.")
-        
+
         if len(response) > 1994:
-            return await ctx.send("The result(s) requires more than 2000 characters. Aborting.")
+            return await ctx.send(
+                "The result(s) requires more than 2000 characters. Aborting."
+            )
         await ctx.send(f"```{response}```")
 
 
