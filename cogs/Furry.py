@@ -48,7 +48,8 @@ class Furry(commands.Cog):
         }
         embed = discord.Embed(colour=colors.get(post.rating))
 
-        if mimetypes.guess_type(post_url.split("/")[-1]).startswith("image"):
+        mimetype = mimetypes.guess_type(post_url.split("/")[-1])[0]
+        if mimetype and mimetype.startswith("image"):
             embed.set_image(url=post_url)
         embed.set_thumbnail(url="https://e621.net/apple-touch-icon.png")
         embed.set_author(name=f"Post #{post.id}")
