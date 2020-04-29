@@ -201,6 +201,14 @@ version = "1.18.2"
 
 [[package]]
 category = "main"
+description = "Threading and multiprocessing eye-candy."
+name = "pebble"
+optional = false
+python-versions = "*"
+version = "4.5.1"
+
+[[package]]
+category = "main"
 description = "Python Imaging Library (Fork)"
 name = "pillow"
 optional = false
@@ -355,7 +363,7 @@ type = "git"
 url = "https://git.rorre.xyz/ren/Yippi.git"
 
 [metadata]
-content-hash = "d8ff574748c5c2585a2f31d2a93811f49623d10567cee270305a4e5b2e8be45f"
+content-hash = "5a3c2f26e6febbc35cba8dba4f3efeee34a2402a24541457da2df366bde820b0"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -535,6 +543,10 @@ numpy = [
     {file = "numpy-1.18.2-cp38-cp38-win32.whl", hash = "sha256:5e0feb76849ca3e83dd396254e47c7dba65b3fa9ed3df67c2556293ae3e16de3"},
     {file = "numpy-1.18.2-cp38-cp38-win_amd64.whl", hash = "sha256:ba3c7a2814ec8a176bb71f91478293d633c08582119e713a0c5351c0f77698da"},
     {file = "numpy-1.18.2.zip", hash = "sha256:e7894793e6e8540dbeac77c87b489e331947813511108ae097f1715c018b8f3d"},
+]
+pebble = [
+    {file = "Pebble-4.5.1-py2.py3-none-any.whl", hash = "sha256:077b51bcb8726ad9003214fb268fe8c51778503f4c37ffcea9a905ab97e23473"},
+    {file = "Pebble-4.5.1.tar.gz", hash = "sha256:26fdcc0f36d93d8e07559d36b942b7800c6b9622626d5b587ab1a74820d02732"},
 ]
 pillow = [
     {file = "Pillow-7.1.1-cp35-cp35m-macosx_10_10_intel.whl", hash = "sha256:b7453750cf911785009423789d2e4e5393aae9cbb8b3f471dab854b85a26cb89"},

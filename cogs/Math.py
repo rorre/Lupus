@@ -4,11 +4,20 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from functools import partial
 from token import NAME
 
+from pebble import concurrent
+
 from discord.ext import commands
 from sympy.parsing.sympy_parser import (
-    convert_equals_signs, convert_xor, eval_expr, function_exponentiation,
-    implicit_application, implicit_multiplication, split_symbols,
-    standard_transformations, stringify_expr)
+    convert_equals_signs,
+    convert_xor,
+    eval_expr,
+    function_exponentiation,
+    implicit_application,
+    implicit_multiplication,
+    split_symbols,
+    standard_transformations,
+    stringify_expr,
+)
 
 block_re = re.compile(r"```(.+)```", flags=re.DOTALL)
 
@@ -74,25 +83,31 @@ transforms = [
 transforms.extend(standard_transformations)
 
 
+@concurrent.process(timeout=10)
+def job(equations):
+    response = ""
+    i = 1
+    for equation in equations:
+        if not equation.strip():
+            continue
+        response += f"\r{i}. "
+        try:
+            parsed = stringify_expr(equation, {}, namespace, transforms)
+            evaluated = eval_expr(parsed, {}, namespace)
+            response += repr(evaluated)
+        except Exception as e:
+            response += f"{e.__class__.__name__} occured."
+        i += 1
+    return response
+
+
 class Math(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.thread_pool = ThreadPoolExecutor()
 
     def _do_equations(self, equations):
-        response = ""
-        i = 1
-        for equation in equations:
-            if not equation.strip():
-                continue
-            response += f"\r{i}. "
-            try:
-                parsed = stringify_expr(equation, {}, namespace, transforms)
-                evaluated = eval_expr(parsed, {}, namespace)
-                response += repr(evaluated)
-            except Exception as e:
-                response += f"{e.__class__.__name__} occured."
-            i += 1
+        return job(equations).result()
 
     @commands.command()
     @commands.cooldown(10, 60, commands.BucketType.user)
@@ -108,12 +123,11 @@ class Math(commands.Cog):
         else:
             splitted_lines = [equations]
 
-        task = self.bot.loop.run_in_executor(
-            self.thread_pool, partial(self._do_equations, splitted_lines)
-        )
         try:
-            response = await asyncio.wait_for(task, timeout=5.0)
-        except asyncio.TimeoutError:
+            response = await self.bot.loop.run_in_executor(
+                self.thread_pool, partial(self._do_equations, splitted_lines)
+            )
+        except asyncio.exceptionsTimeoutError:
             return await ctx.send("Command timeout.")
 
         if len(response) > 1994:

@@ -19,6 +19,7 @@ sympy = "^1.5.1"
 cython = "^0.29.16"
 matplotlib = "^3.2.1"
 jikanpy = "^3.4.2"
+pebble = "^4.5.1"
 
 [tool.poetry.dev-dependencies]
 
