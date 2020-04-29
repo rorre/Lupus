@@ -1,5 +1,8 @@
+import asyncio
 import re
 from token import NAME
+from concurrent.futures.thread import ThreadPoolExecutor
+from functools import partial
 
 from discord.ext import commands
 from sympy.parsing.sympy_parser import (
@@ -81,6 +84,22 @@ transforms.extend(standard_transformations)
 class Math(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.thread_pool = ThreadPoolExecutor()
+
+    def _do_equations(self, equations):
+        response = ""
+        i = 1
+        for equation in equations:
+            if not equation.strip():
+                continue
+            response += f"\r{i}. "
+            try:
+                parsed = stringify_expr(equation, {}, namespace, transforms)
+                evaluated = eval_expr(parsed, {}, namespace)
+                response += repr(evaluated)
+            except Exception as e:
+                response += f"{e.__class__.__name__} occured."
+            i += 1
 
     @commands.command()
     @commands.cooldown(10, 60, commands.BucketType.user)
@@ -96,19 +115,14 @@ class Math(commands.Cog):
         else:
             splitted_lines = [equations]
 
-        response = ""
-        i = 1
-        for equation in splitted_lines:
-            if not equation.strip():
-                continue
-            response += f"\r{i}. "
-            try:
-                parsed = stringify_expr(equation, {}, namespace, transforms)
-                evaluated = eval_expr(parsed, {}, namespace)
-                response += repr(evaluated)
-            except Exception as e:
-                response += f"{e.__class__.__name__} occured."
-            i += 1
+        task = self.bot.loop.run_in_executor(
+            self.thread_pool, partial(self._do_equations, splitted_lines)
+        )
+        try:
+            await asyncio.wait_for(task, timeout=5.0)
+        except asyncio.TimeoutError:
+            return await ctx.send("Command timeout.")
+        
         if len(response) > 1994:
             return await ctx.send("The result(s) requires more than 2000 characters. Aborting.")
         await ctx.send(f"```{response}```")
