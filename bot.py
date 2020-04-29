@@ -9,7 +9,6 @@ cogs = [
     "cogs.Fun",
     "cogs.Furry",
     "cogs.General",
-    "cogs.Math",
     "cogs.Misc",
     "cogs.Reminder",
     "cogs.Server",
