@@ -109,6 +109,8 @@ class Math(commands.Cog):
             except Exception as e:
                 response += f"{e.__class__.__name__} occured."
             i += 1
+        if response > 1994:
+            return await ctx.send("The result(s) requires more than 2000 characters. Aborting.")
         await ctx.send(f"```{response}```")
 
 
