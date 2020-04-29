@@ -1,3 +1,4 @@
+import mimetypes
 import random
 import re
 
@@ -27,6 +28,15 @@ class Furry(commands.Cog):
             for tag in tags_category:
                 all_tags.append(tag)
         tags_string = " ".join(all_tags)
+
+        post_url = post.sample["url"]
+        if not post_url:
+            return discord.Embed(
+                title="Error",
+                colour=discord.Colour(0x4A90E2),
+                description="I got a deleted/invalid post from e621. Please try again.",
+            )
+
         if len(tags_string) > 1000:
             tags_string = tags_string[:1000] + "... (*truncated*)"
 
@@ -38,7 +48,8 @@ class Furry(commands.Cog):
         }
         embed = discord.Embed(colour=colors.get(post.rating))
 
-        embed.set_image(url=post.sample["url"])
+        if mimetypes.guess_type(post_url.split("/")[-1]).startswith("image"):
+            embed.set_image(url=post_url)
         embed.set_thumbnail(url="https://e621.net/apple-touch-icon.png")
         embed.set_author(name=f"Post #{post.id}")
 
@@ -47,7 +58,7 @@ class Furry(commands.Cog):
         )
         embed.add_field(name="Rating", value=ratings.get(post.rating), inline=True)
         embed.add_field(name="Tags", value=f"`{tags_string}`", inline=False)
-        embed.add_field(name="Full Image URL", value=post.file["url"], inline=False)
+        embed.add_field(name="Full URL", value=post.file["url"], inline=False)
 
         return embed
 
