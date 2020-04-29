@@ -100,7 +100,7 @@ class Server(commands.Cog, name="Server Only"):
         else:
             members = guild_members
         member = random.choice(members)
-        message = " ".join(message)
+        message = discord.utils.escape_mentions(" ".join(message))
         await ctx.send(f"{member.display_name} {message}")
 
     @commands.command()
