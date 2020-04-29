@@ -18,6 +18,9 @@ class Weeb(commands.Cog):
         return embed
 
     async def _doit(self, ctx, user, me_msg, author_msg, action):
+        if not user:
+            return await ctx.send("Who are you doing that to?")
+
         if any(u == ctx.me for u in user):
             msg = me_msg
         elif any(u == ctx.author for u in user):

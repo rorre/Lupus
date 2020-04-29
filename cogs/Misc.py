@@ -44,11 +44,11 @@ class Miscellaneous(commands.Cog):
         delta = timedelta(start_time, current_time)
 
         embed_body = (
-            f"**Memory usage**: `{int(memory_usage)}MB`\r"
-            + f"**CPU**: `{cpu_usage}%`\r"
-            + f"**Joined guilds**: `{joined_guilds}`\r"
-            + f"**Users served**: `{served_users}`\r"
-            + f"**Uptime**: `{delta}`\r"
+            f"**Memory usage**: `{int(memory_usage)}MB`\r\n"
+            + f"**CPU**: `{cpu_usage}%`\r\n"
+            + f"**Joined guilds**: `{joined_guilds}`\r\n"
+            + f"**Users served**: `{served_users}`\r\n"
+            + f"**Uptime**: `{delta}`\r\n"
         )
 
         embed = discord.Embed(
@@ -74,9 +74,7 @@ class Miscellaneous(commands.Cog):
             inline=False,
         )
         embed.add_field(
-            name="Support",
-            value="[PayPal](https://paypal.me/rendyak/)",
-            inline=False,
+            name="Support", value="[PayPal](https://paypal.me/rendyak/) // [Ko-fi](https://ko-fi.com/rorre)", inline=False,
         )
 
         await ctx.send(embed=embed)

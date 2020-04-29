@@ -87,7 +87,9 @@ class Reminder(commands.Cog):
 
             reminder_str = f"{user.mention}\r:alarm_clock: Reminder! {reminder.content}"
             if late:
-                reminder_str += f"\rSorry, I am late by {format_time(round(late_by, 2))} :("
+                reminder_str += (
+                    f"\rSorry, I am late by {format_time(round(late_by, 2))} :("
+                )
 
             try:
                 await target.send(reminder_str)

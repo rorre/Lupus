@@ -1,8 +1,6 @@
-import os
 import re
 from token import NAME
 
-import discord
 from discord.ext import commands
 from sympy.parsing.sympy_parser import (
     convert_equals_signs,
@@ -15,9 +13,6 @@ from sympy.parsing.sympy_parser import (
     standard_transformations,
     stringify_expr,
 )
-from sympy.plotting import plot as sympy_plot
-
-from helper import generate_random_name
 
 block_re = re.compile(r"```(.+)```", flags=re.DOTALL)
 
@@ -91,7 +86,7 @@ class Math(commands.Cog):
     @commands.cooldown(10, 60, commands.BucketType.user)
     async def solve(self, ctx, *, equations):
         """Solve basic math problem.
-        
+
         If you want to do multiple equations, do it inside a code block, splitted by new lines."""
         matches = block_re.match(equations)
         if matches:
@@ -115,51 +110,6 @@ class Math(commands.Cog):
                 response += f"{e.__class__.__name__} occured."
             i += 1
         await ctx.send(f"```{response}```")
-
-    @commands.command()
-    @commands.cooldown(5, 60, commands.BucketType.user)
-    async def plot(self, ctx, *, equations):
-        """Draws plots of given equation.
-        
-        If you want to do multiple equations, do it inside a code block, splitted by new lines."""
-        matches = block_re.match(equations)
-        if matches:
-            splitted_lines = list(
-                filter(
-                    lambda x: not (bool(x) or "help" in x),
-                    matches.group(1).splitlines(),
-                )
-            )
-            if len(splitted_lines) > 5:
-                return await ctx.send("Only 5 equations maximum is allowed.")
-        else:
-            splitted_lines = [equations]
-
-        sympy_eqs = []
-        for equation in splitted_lines:
-            if not equation.strip():
-                continue
-            parsed = stringify_expr(equation, {}, namespace, transforms)
-            evaluated = eval_expr(parsed, {}, namespace)
-            e_plot = sympy_plot(evaluated, show=False)
-            sympy_eqs.append(e_plot)
-
-        if not sympy_eqs:
-            return await ctx.send("Please send at least one equation!")
-
-        base_plot = sympy_eqs[0]
-        for e_plot in sympy_eqs:
-            base_plot.extend(e_plot)
-
-        plot_path = "tmp/plot-" + generate_random_name(10) + ".png"
-        base_plot.save(plot_path)
-
-        await ctx.send("Done!", file=discord.File(plot_path))
-
-        try:
-            os.remove(plot_path)
-        except BaseException:
-            pass
 
 
 def setup(bot):
