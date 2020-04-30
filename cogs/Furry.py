@@ -158,6 +158,8 @@ class Furry(commands.Cog):
             return await ctx.send("Either not found or server got toasted.")
         if not picked:
             return await ctx.send("Post doesn't exist!")
+        if picked.rating != "s" and not checks.is_nsfw(ctx):
+            return await ctx.send("Can only send NSFW on NSFW channels.")
         await ctx.send(embed=self._generate_esix_embed(picked))
 
 
