@@ -106,15 +106,6 @@ class Weeb(commands.Cog):
 
     @commands.command()
     @commands.cooldown(10, 20, commands.BucketType.guild)
-    async def neko(self, ctx):
-        """Gets random neko image."""
-        response = (await self.neko_client.get("neko")).get("url")
-        if not response:
-            return await ctx.send("No response from API.")
-        await ctx.send(embed=self._create_embed(response))
-
-    @commands.command()
-    @commands.cooldown(10, 20, commands.BucketType.guild)
     async def cat(self, ctx):
         """Gets random cat image."""
         response = (await self.neko_client.get("meow")).get("url")
@@ -124,25 +115,11 @@ class Weeb(commands.Cog):
 
     @commands.command()
     @commands.cooldown(10, 20, commands.BucketType.guild)
-    async def tickle(self, ctx, user: commands.Greedy[discord.Member]):
-        """Tickles other user."""
-        await self._doit(
-            ctx, user, "Hey! It tickles!", "Can you really tickle yourself?", "tickle"
-        )
-
-    @commands.command()
-    @commands.cooldown(10, 20, commands.BucketType.guild)
     async def poke(self, ctx, user: commands.Greedy[discord.Member]):
         """Pokes other user."""
         await self._doit(
             ctx, user, "Quit poking!", f"{ctx.author.name} pokes theirselves.", "poke"
         )
-
-    @commands.command()
-    @commands.cooldown(10, 20, commands.BucketType.guild)
-    async def kiss(self, ctx, user: commands.Greedy[discord.Member]):
-        """Kisses other user."""
-        await self._doit(ctx, user, "😳", "Self-love I see.", "kiss")
 
     @commands.command()
     @commands.cooldown(10, 20, commands.BucketType.guild)
