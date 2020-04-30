@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 import config
-import checks
+from helper import checks
 from apis.OpenWeatherMap import OWMClient, OWMException, RateLimitedException
 from apis.Urbandictionary import UrbanClient
 
