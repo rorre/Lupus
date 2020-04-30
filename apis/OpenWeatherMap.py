@@ -3,8 +3,7 @@ from typing import List
 from urllib.parse import urlencode
 
 import aiohttp
-from aiocache import cached, Cache
-from aiocache.serializers import PickleSerializer
+from helper.caching import cache
 
 
 class RateLimitedException(Exception):
@@ -71,12 +70,16 @@ class OWMClient:
                 queries[k] = v
         return urlencode(queries)
 
-    @cached(ttl=300, cache=Cache.REDIS, key="weather", serializer=PickleSerializer(), port=6379, namespace="main")
     async def get_weather(self, place, units="metric"):
-        res = await self._call_api(self.WEATHER_URL, q=place, units=units)
+        res = await cache.get(f"weather-{place}")
+        if not res:
+            res = await self._call_api(self.WEATHER_URL, q=place, units=units)
+            await cache.set(f"weather-{place}", res, ttl=300)
         return Weather(res)
 
-    @cached(ttl=300, cache=Cache.REDIS, key="forecast", serializer=PickleSerializer(), port=6379, namespace="main")
     async def get_forecast(self, place, units="metric"):
-        res = await self._call_api(self.FORECAST_URL, q=place, units=units)
+        res = await cache.get(f"weather-{place}")
+        if not res:
+            res = await self._call_api(self.FORECAST_URL, q=place, units=units)
+            await cache.set(f"forecast-{place}", res, ttl=300)
         return Forecast(res)
