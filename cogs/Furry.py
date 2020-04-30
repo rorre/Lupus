@@ -95,7 +95,7 @@ class Furry(commands.Cog):
             return await ctx.send("No results found!")
 
         picked = random.choice(posts)
-        while self._is_deleted(picked):
+        while self._is_deleted_or_blacklisted(picked):
             picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
@@ -118,7 +118,7 @@ class Furry(commands.Cog):
             return await ctx.send("No results found!")
 
         picked = random.choice(posts)
-        while self._is_deleted(picked):
+        while self._is_deleted_or_blacklisted(picked):
             picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
