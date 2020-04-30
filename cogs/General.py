@@ -21,9 +21,9 @@ class General(commands.Cog):
     @commands.command(pass_context=True)
     async def avatar(self, ctx, users: commands.Greedy[discord.User]):
         """Sends avatar link of mentioned users."""
-        res = "Avatar URL for:\r"
+        res = "Avatar URL for:\r\n"
         for user in users:
-            res += f"- {user.name}: {user.avatar_url_as(format='png')}\r"
+            res += f"- {user.name}: {user.avatar_url_as(format='png')}\r\n"
         await ctx.send(res)
 
     @commands.command(pass_context=True)
