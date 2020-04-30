@@ -3,7 +3,8 @@ import random
 import re
 
 import discord
-from cachetools import LRUCache, TTLCache, cached
+from aiocache import cached, Cache
+from aiocache.serializers import PickleSerializer
 from discord.ext import commands
 
 from helper import checks
@@ -71,11 +72,11 @@ class Furry(commands.Cog):
 
         return embed
 
-    @cached(cache=LRUCache(maxsize=512))
+    @cached(cache=Cache.REDIS, key="post", serializer=PickleSerializer(), port=6379, namespace="furry")
     def _cached_search_post(self, pid):
         return self.client.post(pid)
 
-    @cached(cache=TTLCache(maxsize=512, ttl=1800))
+    @cached(ttl=1800, cache=Cache.REDIS, key="search", serializer=PickleSerializer(), port=6379, namespace="furry")
     def _cached_search_query(self, tags=None, limit=None, page=None):
         print(tags)
         return self.client.posts(tags, limit=limit, page=page)
