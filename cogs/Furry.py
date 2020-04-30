@@ -14,12 +14,20 @@ re_esix = re.compile(ESIX_REGEX)
 
 
 class Furry(commands.Cog):
+    blacklist = ['loli', 'foalcon', 'fillies', 'fillycon', 'paedophilia', 'lolicon', 'preteen', 'colt', 'puppy', 'underage', 'pedophilia', 'pups', 'foal', 'kittens', 'filly', 'kemoshota', 'littlefur', 'shota', 'kidfur', 'children', 'duckling', 'puppies', 'kids', 'cubs', 'shotacon', 'kid', 'hatchling', 'young_human', 'fawn', 'kitten']
+
     def __init__(self, bot):
         self.bot = bot
         self.client = AsyncYippiClient("Lupus", "1.0", "Error-", loop=self.bot.loop)
 
-    def _is_deleted(self, post):
-        return post.flags["deleted"]
+    def _is_deleted_or_blacklisted(self, post):
+        all_tags = []
+        for k in post.tags:
+            tags_category = post.tags[k]
+            for tag in tags_category:
+                all_tags.append(tag)
+
+        return post.flags["deleted"] or any([x in all_tags for x in self.blacklist])
 
     def _generate_esix_embed(self, post):
         all_tags = []
@@ -76,7 +84,7 @@ class Furry(commands.Cog):
     @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e621(self, ctx, *, tags):
         """Pulls random post from e621 with given tags."""
-        if "order:score_asc" in tags:
+        if "order:score_asc" in tags or any([x in tags for x in self.blacklist]):
             await ctx.send("Nope.")
             return
         if "score:" not in tags:
@@ -95,7 +103,7 @@ class Furry(commands.Cog):
     @commands.cooldown(20, 60, commands.BucketType.guild)
     async def e926(self, ctx, *, tags):
         """Pulls random post from e926 with given tags."""
-        if "order:score_asc" in tags:
+        if "order:score_asc" in tags or any([x in tags for x in self.blacklist]):
             await ctx.send("Nope.")
             return
 
@@ -130,7 +138,7 @@ class Furry(commands.Cog):
             return await ctx.send("Somehow I can't get anything from esix...")
 
         picked = random.choice(posts)
-        while self._is_deleted(picked):
+        while self._is_deleted_or_blacklisted(picked):
             picked = random.choice(posts)
         await ctx.send(embed=self._generate_esix_embed(picked))
 
