@@ -71,15 +71,15 @@ class OWMClient:
         return urlencode(queries)
 
     async def get_weather(self, place, units="metric"):
-        res = await cache.get(f"weather-{place}")
+        res = await cache.get("weather-" + place)
         if not res:
             res = await self._call_api(self.WEATHER_URL, q=place, units=units)
-            await cache.set(f"weather-{place}", res, ttl=300)
+            await cache.set(f"weather-" + place, res, ttl=300)
         return Weather(res)
 
     async def get_forecast(self, place, units="metric"):
-        res = await cache.get(f"weather-{place}")
+        res = await cache.get("forecast-" + place)
         if not res:
             res = await self._call_api(self.FORECAST_URL, q=place, units=units)
-            await cache.set(f"forecast-{place}", res, ttl=300)
+            await cache.set("forecast-" + place, res, ttl=300)
         return Forecast(res)
