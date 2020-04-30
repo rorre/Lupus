@@ -111,12 +111,14 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def reverse(self, ctx, *, message):
+        """Reverses your message."""
         if not message:
             return await ctx.send("You need to send me a message to reverse!")
         await ctx.send(message[::-1])
 
     @commands.command()
     async def upsidedown(self, ctx, *, message):
+        """Flips your message upside down."""
         if not message:
             return await ctx.send("You need to send me a message to flip!")
         response = ""
