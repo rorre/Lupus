@@ -3,11 +3,10 @@ import random
 import re
 
 import discord
-from aiocache import cached, Cache
-from aiocache.serializers import PickleSerializer
 from discord.ext import commands
 
 from helper import checks
+from helper.caching import cache
 from yippi import AsyncYippiClient
 
 ESIX_REGEX = r"https:\/\/[www\.]*e[(?:621)(?:926)]+\.net\/posts\/(\d+)"
@@ -72,13 +71,20 @@ class Furry(commands.Cog):
 
         return embed
 
-    @cached(cache=Cache.REDIS, key="post", serializer=PickleSerializer(), port=6379, namespace="furry")
-    def _cached_search_post(self, pid):
-        return self.client.post(pid)
+    async def _cached_search_post(self, pid):
+        post = await cache.get(f"post-{pid}")
+        if not post:
+            post = await self.client.post(pid)
+            await cache.set(f"post-{pid}", post, ttl=1800)
+        return post
 
-    @cached(ttl=1800, cache=Cache.REDIS, key="search", serializer=PickleSerializer(), port=6379, namespace="furry")
-    def _cached_search_query(self, tags=None, limit=None, page=None):
-        return self.client.posts(tags, limit=limit, page=page)
+    async def _cached_search_query(self, tags=None, limit=None, page=None):
+        posts = await cache.get(f"search-{tags}")
+        if not posts:
+            posts = await self.client.posts(tags, limit=limit, page=page)
+            if posts:
+                await cache.set(f"search-{tags}", posts, ttl=1800)
+        return posts
 
     @commands.command()
     @commands.check(checks.is_nsfw)
