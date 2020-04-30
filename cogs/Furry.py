@@ -87,6 +87,9 @@ class Furry(commands.Cog):
         if "order:score_asc" in tags or any([x in tags for x in self.blacklist]):
             await ctx.send("Nope.")
             return
+        if "status:" in tags and "status:active" not in tags:
+            return await ctx.send("Nope.")
+        tags += "status:active"
         if "score:" not in tags:
             tags += " score:>25"
 
@@ -106,8 +109,11 @@ class Furry(commands.Cog):
         if "order:score_asc" in tags or any([x in tags for x in self.blacklist]):
             await ctx.send("Nope.")
             return
+        if "status:" in tags and "status:active" not in tags:
+            return await ctx.send("Nope.")
 
         tags = tags.replace("rating:e", "").replace("rating:q", "")
+        tags += "status:active"
         if "score:" not in tags:
             tags += " score:>25"
         if "rating:" not in tags:
@@ -127,7 +133,7 @@ class Furry(commands.Cog):
     async def random(self, ctx):
         """Gets random result from e621.
         If channel is not marked with nsfw, rating will always be safe."""
-        query = "score:>25"
+        query = "score:>25 status:active"
         if not await checks.is_nsfw(ctx):
             query += " rating:s"
 
