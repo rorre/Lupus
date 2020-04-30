@@ -5,6 +5,8 @@ import aiohttp
 import discord
 from discord.ext import commands
 
+from helper.caching import cache
+
 cogs = [
     "cogs.Fun",
     "cogs.Furry",
@@ -80,6 +82,7 @@ class Lupus(commands.AutoShardedBot):
 
     async def close(self):
         await self.aiohttp_session.close()
+        await cache.close()
         await super().close()
 
 
