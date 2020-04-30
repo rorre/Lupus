@@ -78,7 +78,6 @@ class Furry(commands.Cog):
 
     @cached(ttl=1800, cache=Cache.REDIS, key="search", serializer=PickleSerializer(), port=6379, namespace="furry")
     def _cached_search_query(self, tags=None, limit=None, page=None):
-        print(tags)
         return self.client.posts(tags, limit=limit, page=page)
 
     @commands.command()
