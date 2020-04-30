@@ -22,6 +22,8 @@ jikanpy = "^3.4.2"
 pebble = "^4.5.1"
 py-memoize = "^1.0.3"
 aiocache = {extras = ["redis"], version = "^0.11.1"}
+ujson = "^2.0.3"
+msgpack = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
