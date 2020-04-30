@@ -72,12 +72,13 @@ class Furry(commands.Cog):
         return embed
 
     @cached(cache=LRUCache(maxsize=512))
-    async def _cached_search_post(self, pid):
-        return await self.client.post(pid)
+    def _cached_search_post(self, pid):
+        return self.client.post(pid)
 
     @cached(cache=TTLCache(maxsize=512, ttl=1800))
-    async def _cached_search_query(self, tags=None, limit=None, page=None):
-        return await self.client.posts(tags, limit=limit, page=page)
+    def _cached_search_query(self, tags=None, limit=None, page=None):
+        print(tags)
+        return self.client.posts(tags, limit=limit, page=page)
 
     @commands.command()
     @commands.check(checks.is_nsfw)
@@ -89,7 +90,7 @@ class Furry(commands.Cog):
             return
         if "status:" in tags and "status:active" not in tags:
             return await ctx.send("Nope.")
-        tags += "status:active"
+        tags += " status:active"
         if "score:" not in tags:
             tags += " score:>25"
 
@@ -113,7 +114,7 @@ class Furry(commands.Cog):
             return await ctx.send("Nope.")
 
         tags = tags.replace("rating:e", "").replace("rating:q", "")
-        tags += "status:active"
+        tags += " status:active"
         if "score:" not in tags:
             tags += " score:>25"
         if "rating:" not in tags:
