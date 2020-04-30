@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 import config
+import checks
 from apis.OpenWeatherMap import OWMClient, OWMException, RateLimitedException
 from apis.Urbandictionary import UrbanClient
 
@@ -29,6 +30,7 @@ class General(commands.Cog):
         await ctx.send(res)
 
     @commands.command(pass_context=True)
+    @commands.check(checks.is_nsfw)
     @commands.cooldown(30, 60, commands.BucketType.guild)
     async def urban(self, ctx, *, query):
         """Search Urbandictionary for a definition."""
