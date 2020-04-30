@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands
 from PIL import Image
 
-from helper import generate_random_name
+from helper import generate_random_name, flip_table
 
 
 class Fun(commands.Cog):
@@ -81,8 +81,10 @@ class Fun(commands.Cog):
         await ctx.send(f"{ctx.author.name} rolled {res} point(s).")
 
     @commands.command(name="8ball")
-    async def eight_ball(self, ctx):
+    async def eight_ball(self, ctx, *, message):
         """Rolls a magic 8-ball."""
+        if not message:
+            return await ctx.send("Ask me something first!")
         answers = [
             "Certainly.",
             "No doubt!",
@@ -106,6 +108,21 @@ class Fun(commands.Cog):
             "Doesn't look good.",
         ]
         await ctx.send(random.choice(answers))
+
+    @commands.command()
+    async def reverse(self, ctx, *, message):
+        if not message:
+            return await ctx.send("You need to send me a message to reverse!")
+        await ctx.send(message[::-1])
+
+    @commands.command()
+    async def upsidedown(self, ctx, *, message):
+        if not message:
+            return await ctx.send("You need to send me a message to flip!")
+        response = ""
+        for char in list(message):
+            response += flip_table.get(char, char)
+        await ctx.send(response)
 
 
 def setup(bot):
