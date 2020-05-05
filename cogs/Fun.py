@@ -36,22 +36,30 @@ class Fun(commands.Cog):
                 "Please send me an image with `f!jpeg` as description!"
             )
 
+        err = False
         for attachment in attachments:
             if attachment.filename.split(".")[-1] not in ("jpg", "png"):
                 continue
             name = generate_random_name(10) + ".jpg"
             await attachment.save("tmp/" + name)
 
-            await self.bot.loop.run_in_executor(
-                self.thread_pool, partial(self._process_image, name)
-            )
+            try:
+                await self.bot.loop.run_in_executor(
+                    self.thread_pool, partial(self._process_image, name)
+                )
+            except:
+                err = True
 
             filenames.append("tmp/more-" + name)
             filenames.append("tmp/" + name)
             images.append(discord.File("tmp/more-" + name))
 
-        if not images:
-            return await ctx.send("Please send valid image!")
+        if err or not images:
+            if err:
+                msg = "An error has occured, is it a valid image?"
+            elif not images:
+                msg = "Please send valid image! (only jpg and png)"
+            return await ctx.send(msg)
         await ctx.send("Done!", files=images)
 
         try:
