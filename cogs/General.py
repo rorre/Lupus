@@ -2,6 +2,7 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands
+from discord.utils import escape_markdown
 
 import config
 from helper import checks
@@ -27,7 +28,8 @@ class General(commands.Cog):
         res = "Avatar URL for:\r\n"
         for user in users:
             res += f"- {user.name}: {user.avatar_url_as(format='png')}\r\n"
-        await ctx.send(res)
+        escaped_res = escape_markdown(res)
+        await ctx.send(escaped_res)
 
     @commands.command(pass_context=True)
     @commands.check(checks.is_nsfw)
