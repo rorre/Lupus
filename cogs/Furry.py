@@ -18,7 +18,7 @@ class Furry(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.client = AsyncYippiClient("Lupus", "1.0", "Error-", loop=self.bot.loop)
+        self.client = AsyncYippiClient("Lupus", "1.0", "Error-", loop=self.bot.loop, session=self.bot.aiohttp_session)
 
     def _is_deleted_or_blacklisted(self, post):
         all_tags = []
@@ -54,7 +54,7 @@ class Furry(commands.Cog):
             "q": discord.Colour(0xADAA07),
             "s": discord.Colour(0xEB612),
         }
-        embed = discord.Embed(colour=colors.get(post.rating))
+        embed = discord.Embed(colour=colors.get(post.rating.value))
 
         mimetype = mimetypes.guess_type(post_url.split("/")[-1])[0]
         if mimetype and mimetype.startswith("image"):
@@ -65,7 +65,7 @@ class Furry(commands.Cog):
         embed.add_field(
             name="Artist", value=f"`{' '.join(post.tags['artist'])}`", inline=True
         )
-        embed.add_field(name="Rating", value=ratings.get(post.rating), inline=True)
+        embed.add_field(name="Rating", value=ratings.get(post.rating.value), inline=True)
         embed.add_field(name="Tags", value=f"`{tags_string}`", inline=False)
         embed.add_field(name="Full URL", value=post.file["url"], inline=False)
 
@@ -75,6 +75,7 @@ class Furry(commands.Cog):
         post = await cache.get(f"post-{pid}")
         if not post:
             post = await self.client.post(pid)
+            post._client = None
             await cache.set(f"post-{pid}", post, ttl=1800)
         return post
 
@@ -83,6 +84,8 @@ class Furry(commands.Cog):
         if not posts:
             posts = await self.client.posts(tags, limit=limit, page=page)
             if posts:
+                for p in posts:
+                   p._client = None
                 await cache.set(f"search-{tags}", posts, ttl=1800)
         return posts
 
@@ -171,7 +174,7 @@ class Furry(commands.Cog):
             return await ctx.send("Either not found or server got toasted.")
         if not picked:
             return await ctx.send("Post doesn't exist!")
-        if picked.rating != "s" and not checks.is_nsfw(ctx):
+        if picked.rating.value != "s" and not checks.is_nsfw(ctx):
             return await ctx.send("Can only send NSFW on NSFW channels.")
         await ctx.send(embed=self._generate_esix_embed(picked))
 
